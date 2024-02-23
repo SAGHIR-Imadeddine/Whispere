@@ -45,7 +45,9 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-
+Route::get('/chat', function () {
+    return view('chat');
+})->name('chat');
 // Socialite Routes
 Route::get('/auth/{provider}/redirect', [ProviderController::class, 'redirect']);
 Route::get('/auth/{provider}/callback', [ProviderController::class, 'callback']);

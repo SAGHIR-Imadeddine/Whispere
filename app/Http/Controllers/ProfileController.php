@@ -28,7 +28,7 @@ class ProfileController extends Controller
         if ($request->has('profile_user')) {
             $userId = $request->input('profile_user');
             $user = User::find($userId);
-            if ($user) {
+            if ($user && $user != Auth::user()) {
                 $existingRequest = FriendRequest::where('user_id', auth()->id())
                     ->where('friend_id', $userId)
                     ->first();

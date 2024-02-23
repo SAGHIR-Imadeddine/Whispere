@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="py-12 mx-auto">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            @if(request()->has('profile_user'))
+            @if(request()->has('profile_user') && request()->input('profile_user') != Auth::user()->id)
             @include('profile.partials.user-profile')
 
             @else
