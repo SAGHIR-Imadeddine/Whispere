@@ -66,19 +66,11 @@ return [
         'pgsql' => [
             'driver' => 'pgsql',
             'url' => env('DATABASE_URL'),
-<<<<<<< HEAD
             'host' => env('DB_HOST', '192.168.8.137'),
             'port' => env('DB_PORT', '5432'),
             'database' => env('DB_DATABASE', 'whispereapp'),
             'username' => env('DB_USERNAME', 'postgres'),
             'password' => env('DB_PASSWORD', 'douae123'),
-=======
-            'host' => env('DB_HOST', '192.168.9.128'),
-            'port' => env('DB_PORT', '5432'),
-            'database' => env('DB_DATABASE', 'whispereapp'),
-            'username' => env('DB_USERNAME', 'postgres'),
-            'password' => env('DB_PASSWORD', 'tZBXGL6GZU&'),
->>>>>>> b88d832bbd1bb72ffd4f6d6dcc359cfd6181c321
             'charset' => 'utf8',
             'prefix' => '',
             'prefix_indexes' => true,

@@ -30,7 +30,7 @@ class ProviderController extends Controller
             $socialUser = Socialite::driver($provider)->user();
             $socialUsername = explode('@', $socialUser->email);
             $socialUserPass = Hash::make($socialUser->getName().'@'.$socialUser->getId());
-            $isregistered = User::where('unique_identifier', $socialUsername)->first();
+            $isregistered = User::where('email', $socialUser->email)->first();
             //dd($socialUser->token);
             if(!in_array($provider, $this->providers))
             {
