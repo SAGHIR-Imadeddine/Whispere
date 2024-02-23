@@ -14,15 +14,26 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
-<<<<<<< HEAD
+
+Route::get('/', 'App\Http\Controllers\PusherController@index');
+Route::post('/broadcast', 'App\Http\Controllers\PusherController@broadcast');
+Route::post('/receive', 'App\Http\Controllers\PusherController@receive');
+
+
+
 Route::get('/chat', function () {
     return view('chat');
 });
-=======
+
+Route::post('/upload/photo', 'MessageController@sendMessage');
+
+
+
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -33,5 +44,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
->>>>>>> e630165c3b279ca10dba42b77690ac3459286a1c
+require __DIR__ . '/auth.php';
