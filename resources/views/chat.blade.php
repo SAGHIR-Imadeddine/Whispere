@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!-- component -->
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
@@ -105,6 +106,14 @@
                     </div>
                 </div>
             </div>
+=======
+<x-app-layout>
+
+    <div class="flex flex-col md:flex-row h-screen antialiased text-gray-800">
+
+        <div class="flex flex-col md:flex-row h-full w-full overflow-x-hidden">
+        @include('layouts.aside-bar')
+>>>>>>> 64571dcbd66632e6cd6f5f2ba3dd18fe70964459
             <div class="flex flex-col flex-auto h-full p-6">
                 <div class="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-gray-100 h-full p-4">
                     <div class="flex flex-col h-full overflow-x-auto mb-4">
@@ -120,6 +129,7 @@
                                         </div>
                                     </div>
                                 </div>
+<<<<<<< HEAD
                                 <div class="col-start-1 col-end-8 p-3 rounded-lg">
                                     <div class="flex flex-row items-center">
                                         <div class="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0">
@@ -156,6 +166,10 @@
                                         </div>
                                     </div>
                                 </div>
+=======
+                               
+                          
+>>>>>>> 64571dcbd66632e6cd6f5f2ba3dd18fe70964459
                                 <div class="col-start-1 col-end-8 p-3 rounded-lg">
                                     <div class="flex flex-row items-center">
                                         <div class="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0">
@@ -193,6 +207,7 @@
                                             </div>
                                         </div>
                                     </div>
+<<<<<<< HEAD
                                 </div>
                                 <div class="col-start-1 col-end-8 p-3 rounded-lg">
                                     <div class="flex flex-row items-center">
@@ -247,6 +262,10 @@
                                     </div>
                                 </div>
                             </div>
+=======
+                               
+                                </div>
+>>>>>>> 64571dcbd66632e6cd6f5f2ba3dd18fe70964459
                         </div>
                     </div>
                     <div class="flex items-center h-16 rounded-xl bg-white w-full px-4">
@@ -284,6 +303,10 @@
             </div>
         </div>
     </div>
+<<<<<<< HEAD
 </body>
 
 </html>
+=======
+</x-app-layout>
+>>>>>>> 64571dcbd66632e6cd6f5f2ba3dd18fe70964459

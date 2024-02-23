@@ -1,7 +1,10 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
+
+use App\Http\Controllers\Auth\ProviderController;
 use Illuminate\Support\Facades\Route;
+use Laravel\Socialite\Facades\Socialite;
+use App\Http\Controllers\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
