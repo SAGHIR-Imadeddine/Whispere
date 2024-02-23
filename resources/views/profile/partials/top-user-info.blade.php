@@ -22,9 +22,10 @@
         </div>
     </div>
 
-    <div class="flex items-center">
+    <div class="flex items-center" >
         {{ $qrCode}}
     </div>
+
 
 </div>
 <div class="mt-4 pt-4 flex justify-between items-center border-t border-t-2">
@@ -63,7 +64,6 @@
 
     function CopyLink() {
         var Link = document.getElementById("ProfileLink");
-
         navigator.clipboard.writeText(Link.innerText);
         document.getElementById("copiedText").classList.remove("hidden");
     }
