@@ -1,4 +1,4 @@
-<nav x-data="{ open: false }" class="bg-violet-300 border-b border-gray-100 flex flex-col  h-screen w-20">
+<nav x-data="{ open: false }" class="bg-violet-300 border-b border-gray-100 flex flex-col w-20">
 
 
     <!-- Navigation Links -->
@@ -48,7 +48,13 @@
                 <x-slot name="trigger">
                     <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500  hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
                         <div class="w-10 h-10 rounded-full overflow-hidden">
-                            <img src="{{asset('storage/'. auth()->user()->profile_image)}}" alt="Image de profil" class="w-full h-full object-cover">
+                            @if(auth()->user()->profile_image)
+                            <img src="{{ asset('storage/' . auth()->user()->profile_image) }}" alt="Image de profil" class="w-full h-full object-cover rounded-full">
+                            @else
+                            <div class="flex items-center justify-center h-8 w-8 bg-indigo-200 rounded-full">
+                                {{ substr(auth()->user()->name, 0, 1) }}
+                            </div>
+                            @endif
                         </div>
 
                     </button>

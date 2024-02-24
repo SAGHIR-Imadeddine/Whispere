@@ -17,7 +17,7 @@
 </head>
 
 <body class="font-sans antialiased">
-    <div class="min-h-screen bg-gray-100">
+    <div class=" bg-gray-100">
 
 
         <!-- Page Heading -->
@@ -30,7 +30,7 @@
         @endif
 
         <!-- Page Content -->
-        <main class="flex flex-col md:flex-row h-screen antialiased text-gray-800">
+        <main class="flex flex-col md:flex-row antialiased text-gray-800">
             @include('layouts.navigation')
             {{ $slot }}
         </main>
