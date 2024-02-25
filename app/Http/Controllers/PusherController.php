@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\LocationBroadcast;
 use App\Events\PusherBroadcast;
 use App\Models\Message;
 use Illuminate\Http\Request;
@@ -14,35 +15,45 @@ class PusherController extends Controller
     }
 
     public function broadcast(Request $request)
-{
-    $conversationId = 1; 
-    $userId = 1; 
+    {
+        $conversationId = 1;
+        $userId = 1;
 
-    $message = $request->input('content', '');
-    $isImage = $request->hasFile('image');
+        $message = $request->input('content', '');
+        $isImage = $request->hasFile('image');
 
-    if ($isImage) {
-        $imagePath = $request->file('image')->store('photos', 'public');
-        $mediaUrl = asset('storage/' . $imagePath);
-    } else {
-        $mediaUrl = null;
+
+        $latitude = $request->input('latitude');
+        $longitude = $request->input('longitude');
+
+        if ($isImage) {
+            $imagePath = $request->file('image')->store('photos', 'public');
+            $mediaUrl = asset('storage/' . $imagePath);
+        } else {
+            $mediaUrl = null;
+        }
+
+        // Save the message to the database
+        $newMessage = Message::create([
+            'conversation_id' => $conversationId,
+            'user_id' => $userId,
+            'content' => $message,
+            'media_url' => $mediaUrl,
+        ]);
+
+        if ($isImage) {
+            broadcast(new PusherBroadcast(null, $isImage))->toOthers();
+        } elseif ($latitude && $longitude) {
+            broadcast(new LocationBroadcast("Location: Latitude $latitude, Longitude $longitude", false))->toOthers();
+        } else {
+            broadcast(new PusherBroadcast($newMessage->content, null))->toOthers();
+        }
+        return view('broadcast', [
+            'message' => $newMessage->content,
+            'mediaUrl' => $mediaUrl,
+            'locationDetails' => ($latitude && $longitude) ? "Location: Latitude $latitude, Longitude $longitude" : null,
+        ]);
     }
-
-    // Save the message to the database
-    $newMessage = Message::create([
-        'conversation_id' => $conversationId,
-        'user_id' => $userId,
-        'content' => $message,
-        'media_url' => $mediaUrl,
-    ]);
-
- if ($isImage) {
-        broadcast(new PusherBroadcast(null, $isImage))->toOthers();
-    } else {
-        broadcast(new PusherBroadcast($newMessage->content, null))->toOthers();
-    }
-    return view('broadcast', ['message' => $newMessage->content, 'mediaUrl' => $mediaUrl]);
-}
 
 
     public function receive(Request $request)
@@ -50,11 +61,9 @@ class PusherController extends Controller
         return view('receive', [
             'message' => $request->get('message'),
             'isImage' => $request->get('isImage', false),
+            // 'locationDetails' => "Location: $request->get('Longitude', false),  $request->get('latitude', false),"
         ]);
     }
-}
-
-    
 //     public function broadcast(Request $request)
 // {
 //     $user = Auth::user(); // Assuming you are using authentication
@@ -83,3 +92,4 @@ class PusherController extends Controller
 
 //     return view('broadcast', ['message' => $newMessage->content, 'isImage' => $isImage]);
 // }
+}

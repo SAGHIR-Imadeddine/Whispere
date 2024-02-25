@@ -20,4 +20,15 @@
     @endif
 @endif
 
+@if ($locationDetails)
+        <p>{{ $locationDetails }}</p>
+        {{-- You can customize the presentation of location details as needed --}}
+    @endif
+
+     {{-- @if ($latitude && $longitude)
+            <iframe width="300" height="200" frameborder="0" style="border:0" 
+                src="https://www.google.com/maps/embed/v1/view?center={{ $latitude }},{{ $longitude }}&zoom=15" allowfullscreen>
+            </iframe>
+        @endif --}}
+
 </div>
