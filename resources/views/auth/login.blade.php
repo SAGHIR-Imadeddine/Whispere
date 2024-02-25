@@ -52,8 +52,8 @@
         <div class="w-full flex flex-col items-center gap-4 mt-4">
 
             <!-- Google Login -->
-            <a href="/auth/google/redirect" class="w-full flex items-center justify-between border  bg-gray-100 rounded-lg p-3">
-                <div class="flex items-center gap-3">
+            <a href="/auth/google/redirect" class=" w-full flex items-center justify-between border  bg-gray-100 rounded-lg p-3">
+                <div class="flex items-center gap-3 mx-auto">
                     <svg width="40px" height="40px" viewBox="-5.28 -5.28 26.56 26.56" xmlns="http://www.w3.org/2000/svg" fill="none">
                         <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                         <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -69,8 +69,8 @@
             </a>
 
             <!-- Facebook Login -->
-            <a href="/auth/facebook/redirect" class="w-full flex items-center justify-between border bg-gray-100 rounded-lg p-3">
-                <div class="flex items-center gap-3">
+            <a href="/auth/facebook/redirect" class="text-center w-full flex items-center justify-between border bg-gray-100 rounded-lg p-3">
+                <div class="flex items-center gap-3 mx-auto">
                     <svg xmlns="http://www.w3.org/2000/svg" aria-label="Facebook" role="img" viewBox="-97.28 -97.28 706.56 706.56" width="40px" height="40px" fill="#000000">
                         <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                         <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>

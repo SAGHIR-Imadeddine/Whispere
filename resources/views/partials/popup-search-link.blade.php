@@ -1,4 +1,4 @@
-<div x-data="{ open: false }">
+<div x-data="{ open: false   }">
     <button x-on:click="open = ! open" class="cursor-pointer">
         <svg width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g id="SVGRepo_bgCarrier" stroke-width="0" />
@@ -9,23 +9,28 @@
             </g>
         </svg>
     </button>
-    <div x-show="open" @click.away="open = true" class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
-                <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
-            </div>
-            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                <div class="bg-white px-4 pt-1 pb-4 sm:p-6 sm:pb-4">
+    <div x-show="open" class="fixed z-10 inset-0 overflow-y-auto flex items-center justify-center" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="transition-opacity bg-gray-500 bg-opacity-75 absolute inset-0"></div>
+        <!-- Modal -->
+        <div class="bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
+            <div class="px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                <!-- Bouton de fermeture -->
+                <div class="absolute top-0 right-0 mt-4 mr-4">
+                    <button @click="open = false" class="text-gray-500 hover:text-gray-400 focus:outline-none">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                <!-- Titre -->
+                <h3 class="text-lg leading-6 font-medium text-gray-900 text-center mb-4" id="modal-title">Vous cherchez votre ami par lien</h3>
+                <!-- Contenu -->
+                <div class="mt-2">
                     <div class="relative">
-                        <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
-                            <svg class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                            </svg>
-                        </div>
-                        <form >
-                            <input type="search" id="default-search" class="block p-4 pl-10 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search" required>
-                            <button onclick="redirectToURL()">Search</button>
+                        <form action="{{ route('check-cache') }}" method="POST">
+                            @csrf
+                            <input type="text"  id="user_url" name="user_url"   class="block pl-12 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Enter URL" required>
+                            <button type="submit" class="block mx-auto mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Search</button>
                         </form>
                     </div>
                 </div>
@@ -33,12 +38,3 @@
         </div>
     </div>
 </div>
-
-<script>
-    function redirectToURL() {
-        let url = document.getElementById('default-search').value;
-        console.log(url);
-        window.location.href = url;
-
-    }
-</script>
