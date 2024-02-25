@@ -31,9 +31,9 @@ Route::post('/broadcast-location', 'App\Http\Controllers\PusherController@broadc
 
 
 
-Route::get('/chat', function () {
-    return view('chat');
-});
+// Route::get('/chat', function () {
+//     return view('chat');
+// });
 
 
 
