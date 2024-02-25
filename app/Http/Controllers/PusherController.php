@@ -48,11 +48,21 @@ class PusherController extends Controller
         } else {
             broadcast(new PusherBroadcast($newMessage->content, null))->toOthers();
         }
+
         return view('broadcast', [
             'message' => $newMessage->content,
             'mediaUrl' => $mediaUrl,
-            'locationDetails' => ($latitude && $longitude) ? "Location: Latitude $latitude, Longitude $longitude" : null,
+            'locationDetails' => ($latitude && $longitude) ? [
+                'text' => "Location: Latitude $latitude, Longitude $longitude",
+                'latitude' => $latitude,
+                'longitude' => $longitude,
+            ] : null,
         ]);
+        // return view('broadcast', [
+        //     'message' => $newMessage->content,
+        //     'mediaUrl' => $mediaUrl,
+        //     'locationDetails' => ($latitude && $longitude) ? "Location: Latitude $latitude, Longitude $longitude" : null,
+        // ]);
     }
 
 

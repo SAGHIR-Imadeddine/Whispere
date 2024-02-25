@@ -1,34 +1,40 @@
 <div class="right message">
-    @if($message)
+    @if ($message)
         <p>{{ $message }}</p>
     @endif
-    {{-- @if ($mediaUrl)
-    <div >
-      <img src="{{ $mediaUrl }}" alt="Image" style="width: 150px; height: auto;">
-    </div>
-    @endif --}}
     @if ($mediaUrl)
-    @php
-        $fileExtension = pathinfo($mediaUrl, PATHINFO_EXTENSION);
-        $imageExtensions = ['jpg', 'jpeg', 'png', 'gif']; 
-    @endphp
+        @php
+            $fileExtension = pathinfo($mediaUrl, PATHINFO_EXTENSION);
+            $imageExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+        @endphp
 
-    @if (in_array(strtolower($fileExtension), $imageExtensions))
-    <img src="{{ $mediaUrl }}" alt="Image" style="width: 150px; height: auto;">
-    @else
-        <a href="{{ $mediaUrl }}" download="filename">Download File</a>
+        @if (in_array(strtolower($fileExtension), $imageExtensions))
+            <img src="{{ $mediaUrl }}" alt="Image" style="width: 150px; height: auto;">
+        @else
+            <a href="{{ $mediaUrl }}" download="filename">Download File</a>
+        @endif
     @endif
-@endif
+    @if ($locationDetails)
+        <p>{{ $locationDetails['text'] }}</p>
 
-@if ($locationDetails)
-        <p>{{ $locationDetails }}</p>
-        {{-- You can customize the presentation of location details as needed --}}
+        <!-- Generate a unique map container ID -->
+        @php
+            $mapContainerId = 'map_' . uniqid();
+        @endphp
+        <div id="{{ $mapContainerId }}" style="height: 150px;"></div>
+        <!-- JavaScript for Leaflet map -->
+        <script>
+            var latitude = {{ $locationDetails['latitude'] }};
+            var longitude = {{ $locationDetails['longitude'] }};
+            var map = L.map('{{ $mapContainerId }}').setView([latitude, longitude], 15);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+            L.marker([latitude, longitude]).addTo(map)
+                .bindPopup('Location').openPopup();
+            L.Control.geocoder().addTo(map);
+        </script>
     @endif
 
-     {{-- @if ($latitude && $longitude)
-            <iframe width="300" height="200" frameborder="0" style="border:0" 
-                src="https://www.google.com/maps/embed/v1/view?center={{ $latitude }},{{ $longitude }}&zoom=15" allowfullscreen>
-            </iframe>
-        @endif --}}
 
 </div>
