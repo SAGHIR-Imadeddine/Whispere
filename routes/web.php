@@ -31,7 +31,6 @@ Route::get('/chat', function () {
     return view('chat');
 });
 
-Route::post('/upload/photo', 'MessageController@sendMessage');
 
 
 

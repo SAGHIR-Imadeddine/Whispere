@@ -35,20 +35,17 @@
     @include('receive', ['message' => "Ask a friend to open this link and you can chat with them!"])
   </div>
 
-  <form id="chat-form">
-    <input type="text" id="message-input" placeholder="Type a message..." />
-    <input type="file" id="file-input" />
-    <button type="submit">Send</button>
-</form>
+
   <!-- End Chat -->
 
   <!-- Footer -->
-  <div class="bottom">
-    <form>
-      <input type="text" id="message" name="message" placeholder="Enter message..." autocomplete="off">
-      <button type="submit"></button>
-    </form>
-  </div>
+  <form id="chatForm" enctype="multipart/form-data">
+    {{ csrf_field() }}
+    <input type="text" id="message" name="content" placeholder="Type your message here..." />
+    <input type="file" id="image" name="image" accept="image/*" />
+    <button type="submit">Send</button>
+</form>
+
   <!-- End Footer -->
 
 </div>
@@ -70,25 +67,48 @@
      });
   });
 
-  //Broadcast messages
-  $("form").submit(function (event) {
+  $("form#chatForm").submit(function (event) {
     event.preventDefault();
-
+    var formData = new FormData($(this)[0]);
     $.ajax({
-      url:     "/broadcast",
-      method:  'POST',
-      headers: {
-        'X-Socket-Id': pusher.connection.socket_id
-      },
-      data:    {
-        _token:  '{{csrf_token()}}',
-        message: $("form #message").val(),
-      }
-    }).done(function (res) {
-      $(".messages > .message").last().after(res);
-      $("form #message").val('');
-      $(document).scrollTop($(document).height());
+        url: "/broadcast",
+        type: "POST",
+        headers: {
+            'X-Socket-Id': pusher.connection.socket_id
+        },
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (res) {
+            $(".messages > .message").last().after(res);
+            $("form #message").val('');
+            $("form #image").val('');
+            $(document).scrollTop($(document).height());
+        },
+        error: function (error) {
+            console.log("Error uploading file:", error);
+        }
     });
-  });
+});
+  //Broadcast messages
+//   $("form").submit(function (event) {
+//     event.preventDefault();
+
+//     $.ajax({
+//       url:     "/broadcast",
+//       method:  'POST',
+//       headers: {
+//         'X-Socket-Id': pusher.connection.socket_id
+//       },
+//       data:    {
+//         _token:  '{{csrf_token()}}',
+//         message: $("form #message").val(),
+//       }
+//     }).done(function (res) {
+//       $(".messages > .message").last().after(res);
+//       $("form #message").val('');
+//       $(document).scrollTop($(document).height());
+//     });
+//   });
 </script>
 </html>

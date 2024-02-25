@@ -11,11 +11,15 @@ class PusherBroadcast implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public string $message;
+    public ?string $message;
+    public ?string $isImage;
 
-    public function __construct(string $message)
+
+    public function __construct(?string $message,?string $isImage)
     {
         $this->message = $message;
+        $this->isImage = $isImage;
+
     }
 
     public function broadcastOn(): array
