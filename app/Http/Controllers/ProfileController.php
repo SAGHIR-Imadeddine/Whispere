@@ -47,7 +47,7 @@ class ProfileController extends Controller
             //  $qrReader not an object when there is no qr found erreuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuur 
             if (is_object($qrReader) && method_exists($qrReader, 'text')) {
                 $decodedText = $qrReader->text();
-                return $this->searchByUrl($decodedText);
+                return redirect()->away($decodedText);
             } else {
                 session()->flash('error', 'Échec de la création de l\'objet QrReader.');
                 return redirect()->back();
@@ -68,7 +68,7 @@ class ProfileController extends Controller
         if ($request->has('profile_user')) {
             if (!$request->hasValidSignature()) {
                 session()->flash('error', 'L\'URL saisie est invalide.');
-                return redirect()->back();
+                return view('chat');
             };
 
             $userId = $request->input('profile_user');
