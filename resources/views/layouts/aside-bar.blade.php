@@ -49,7 +49,10 @@
 
             @foreach ($users as $user)
                 <div class="flex items-center gap-4">
-                    <img src="{{ asset('storage/' . $user->profile_image) }}" alt="{{ $user->name }}'s Profile Image">
+                    <div class="w-10 h-10 rounded-full overflow-hidden">
+                        <img class="w-full h-full object-cover" src="{{ asset('storage/' . $user->profile_image) }}"
+                            alt="{{ $user->name }}'s Profile Image">
+                    </div>
                     <div class="font-medium flex gap-4 text-black">
                         <form action="{{ route('profile.edit') }}" method="get">
                             @csrf

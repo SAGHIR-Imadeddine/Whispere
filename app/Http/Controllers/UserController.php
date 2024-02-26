@@ -12,6 +12,6 @@ class UserController extends Controller
         $name = $request->input('unique_identifier');
         $users = User::where('unique_identifier', 'like', '%' . $name . '%')->get();
 
-        return view('search', ['users' => $users]);
+        return view('chat', ['users' => $users]);
     }
 }
