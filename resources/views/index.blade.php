@@ -62,29 +62,29 @@
         const channel = pusher.subscribe('public');
 
         // Share location function
-         function shareLocation() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                function(position) {
-                    const latitude = position.coords.latitude;
-                    const longitude = position.coords.longitude;
-                    $("#latitude").val(latitude);
-                    $("#longitude").val(longitude);
+        function shareLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        const latitude = position.coords.latitude;
+                        const longitude = position.coords.longitude;
+                        $("#latitude").val(latitude);
+                        $("#longitude").val(longitude);
 
-                    console.log("Location shared successfully");
-                    console.log('Received location:', latitude, longitude);
+                        console.log("Location shared successfully");
+                        console.log('Received location:', latitude, longitude);
 
-                    // Trigger form submission
-                    $("form#chatForm").submit();
-                },
-                function(error) {
-                    console.error('Error getting location:', error.message);
-                }
-            );
-        } else {
-            console.error('Geolocation is not supported by this browser.');
+                        // Trigger form submission
+                        $("form#chatForm").submit();
+                    },
+                    function(error) {
+                        console.error('Error getting location:', error.message);
+                    }
+                );
+            } else {
+                console.error('Geolocation is not supported by this browser.');
+            }
         }
-    }
 
         // Receive location messages
         channel.bind('location', function(data) {
@@ -141,4 +141,5 @@
         });
     </script>
 </body>
+
 </html>
