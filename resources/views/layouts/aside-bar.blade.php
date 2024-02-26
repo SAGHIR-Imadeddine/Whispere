@@ -48,7 +48,7 @@
             @endif
 
             @foreach ($users as $user)
-                <div class="flex items-center gap-4">
+                <div class="flex items-center mt-2 gap-4">
                     <div class="w-10 h-10 rounded-full overflow-hidden">
                         <img class="w-full h-full object-cover" src="{{ asset('storage/' . $user->profile_image) }}"
                             alt="{{ $user->name }}'s Profile Image">
@@ -66,7 +66,6 @@
                                 ->user()
                                 ->sentFriendRequests->contains('friend_id', $user->id);
                         @endphp
-
                         @if (auth()->user()->id != $user->id && !$friendRequestSent)
                             <form action="{{ route('friendRequest', $user) }}" method="post">
                                 @csrf
@@ -87,32 +86,30 @@
                     </div>
                 </div>
             @endforeach
-
+        </div>
+    @else
+        <div class="flex flex-col mt-8">
+            <div class="flex flex-row items-center justify-between text-xs">
+                <span class="font-bold">Active Conversations</span>
+                <span class="flex items-center justify-center bg-gray-300 h-4 w-4 rounded-full">4</span>
+            </div>
+            @foreach ($friends as $friend)
+                <div class="flex items-center mt-2 gap-4">
+                    <div class="w-10 h-10 rounded-full overflow-hidden">
+                        <img class="w-full h-full object-cover" src="{{ asset('storage/' . $friend->profile_image) }}"
+                            alt="{{ $friend->name }}'s Profile Image">
+                    </div>
+                    <div class="font-medium flex gap-4 text-black">
+                        <form action="{{ route('profile.edit') }}" method="get">
+                            @csrf
+                            <input type="hidden" value="{{ $friend->id }}" name="profile_user">
+                            <button type="submit">
+                                {{ $friend->unique_identifier }}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            @endforeach
         </div>
     @endif
-    <div class="flex flex-col mt-8">
-        <div class="flex flex-row items-center justify-between text-xs">
-            <span class="font-bold">Active Conversations</span>
-            <span class="flex items-center justify-center bg-gray-300 h-4 w-4 rounded-full">4</span>
-        </div>
-        <div class="flex flex-col space-y-1 mt-4 -mx-2 h-fit overflow-y-auto">
-            <button class="flex flex-row items-center hover:bg-gray-100 rounded-xl p-2">
-                <div class="flex items-center justify-center h-8 w-8 bg-indigo-200 rounded-full">
-                    H
-                </div>
-                <div class="ml-2 text-sm font-semibold">Henry Boyd</div>
-            </button>
-
-            <button class="flex flex-row items-center hover:bg-gray-100 rounded-xl p-2">
-                <div class="flex items-center justify-center h-8 w-8 bg-blue-200 rounded-full">
-                    M
-                </div>
-                <div class="ml-2 text-sm font-semibold">Viga Maintalor</div>
-                <div
-                    class="flex items-center justify-center ml-auto text-xs text-white bg-red-500 h-4 w-4 rounded leading-none">
-                    2
-                </div>
-            </button>
-        </div>
-    </div>
 </div>
