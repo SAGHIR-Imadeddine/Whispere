@@ -12,7 +12,11 @@ class UserController extends Controller
     {
         $name = $request->input('unique_identifier');
 
-        $users = User::where('unique_identifier', 'like', '%' . $name . '%')->get();
+        $users = User::where('unique_identifier', 'like', '%' . $name . '%')
+            ->whereDoesntHave('conversations', function ($query) {
+                $query->where('friend_id', auth()->id());
+            })
+            ->get();
 
         $friends = Conversation::where('user_id', auth()->id())
             ->whereHas('friend', function ($query) use ($name) {
