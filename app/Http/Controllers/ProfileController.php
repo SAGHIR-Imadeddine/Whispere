@@ -16,6 +16,7 @@ use App\Models\FriendRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Zxing\QrReader;
+use Illuminate\Routing\Exceptions\InvalidSignatureException;
 
 class ProfileController extends Controller
 {
@@ -65,6 +66,11 @@ class ProfileController extends Controller
         $totalFriends = null;
 
         if ($request->has('profile_user')) {
+            if (!$request->hasValidSignature()) {
+                session()->flash('error', 'L\'URL saisie est invalide.');
+                return redirect()->back();
+            };
+
             $userId = $request->input('profile_user');
             $user = User::find($userId);
             if ($user && $user != Auth::user()) {
@@ -131,16 +137,19 @@ class ProfileController extends Controller
 
     public function searchByUrl(Request $request)
     {
+
         $url = $request->input('user_url');
         // Analyser l'URL saisie par l'utilisateur
         $parsedUrl = parse_url($url);
 
         // Vérifier si le domaine de l'URL correspond au domaine de votre site
-        if ($parsedUrl && isset($parsedUrl['host']) ) {
+        if ($parsedUrl && isset($parsedUrl['host'])) {
+
             $domain = $parsedUrl['host'];
             $allowedDomain = parse_url(config('app.url'), PHP_URL_HOST); // Récupérer le domaine de site à partir de la configuration
 
             if ($domain === $allowedDomain) {
+                // return redirect()->route('profile.edit')->with('url' , $url);
                 return redirect()->away($url);
             } else {
                 session()->flash('error', 'L\'URL saisie ne correspond à aucun profile.');

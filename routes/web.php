@@ -30,7 +30,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::post('/profile',[ProfileController::class , 'decodeQr'])->name('profile.decodeQr');
-    Route::post('/check-cache',[ProfileController::class , 'searchByUrl'])->name('check-cache');
+    Route::post('/SearchByLink',[ProfileController::class , 'searchByUrl'])->name('check-cache');
 });
 Route::get('/chat', function () {
     return view('chat');
