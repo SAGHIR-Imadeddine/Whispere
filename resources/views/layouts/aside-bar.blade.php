@@ -1,4 +1,22 @@
 <div class="flex flex-col py-4 px-8 md:px-2 md:w-80 bg-white flex-shrink-0">
+    @if(session('error'))
+
+    <div id="alert" class="flex justify-between absolute top-0 right-0 mt-4 mr-4 bg-red-600 text-white px-4 py-2 rounded">
+        {{ session('error') }}
+        <button onclick="closeAlert()" class="ml-4 text-gray-500 hover:text-gray-400 focus:outline-none">
+            <svg class="h-6 w-6" fill="none" stroke="white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+    </div>
+    @endif
+    <script>
+        function closeAlert() {
+            var alert = document.getElementById('alert');
+            alert.style.display = 'none';
+        }
+    </script>
+
     <div class="flex flex-row items-center justify-center h-12 w-full">
         <div class="flex items-center justify-center rounded-2xl text-indigo-700 bg-indigo-100 h-10 w-10">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

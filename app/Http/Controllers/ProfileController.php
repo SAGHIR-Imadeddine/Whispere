@@ -45,16 +45,16 @@ class ProfileController extends Controller
             $qrReader = new QrReader($imageContent, QrReader::SOURCE_TYPE_BLOB);
             //  $qrReader not an object when there is no qr found erreuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuur 
             if (is_object($qrReader) && method_exists($qrReader, 'text')) {
-                    $decodedText = $qrReader->text();  
-                    dd('le:ud:dbudfuhj');  
-                    return $this->searchByUrl($decodedText);           
+                $decodedText = $qrReader->text();
+                return $this->searchByUrl($decodedText);
             } else {
-                return redirect()->back()->withErrors(['error' => 'Échec de la création de l\'objet QrReader.']);
+                session()->flash('error', 'Échec de la création de l\'objet QrReader.');
+                return redirect()->back();
             }
         } catch (\Exception $e) {
-            return redirect()->back()->withErrors(['error' => 'Échec du décodage du code QR.']);
+            session()->flash('error', 'Échec du décodage du code QR.');
+            return redirect()->back();
         }
-
     }
 
 
@@ -63,6 +63,7 @@ class ProfileController extends Controller
         $user = null;
         $commonFriends = null;
         $totalFriends = null;
+
         if ($request->has('profile_user')) {
             $userId = $request->input('profile_user');
             $user = User::find($userId);
@@ -77,6 +78,7 @@ class ProfileController extends Controller
                     $friendRequest->friend_id = $userId;
                     $friendRequest->request_status = 'accepted';
                     $friendRequest->save();
+                    session()->flash('NewRequest');
                 }
 
                 $totalFriends = DB::table('friend_requests')
@@ -130,22 +132,23 @@ class ProfileController extends Controller
     public function searchByUrl(Request $request)
     {
         $url = $request->input('user_url');
-
         // Analyser l'URL saisie par l'utilisateur
         $parsedUrl = parse_url($url);
 
         // Vérifier si le domaine de l'URL correspond au domaine de votre site
-        if ($parsedUrl && isset($parsedUrl['host'])) {
+        if ($parsedUrl && isset($parsedUrl['host']) ) {
             $domain = $parsedUrl['host'];
             $allowedDomain = parse_url(config('app.url'), PHP_URL_HOST); // Récupérer le domaine de site à partir de la configuration
 
             if ($domain === $allowedDomain) {
                 return redirect()->away($url);
             } else {
-                return back()->withErrors(['error' => 'L\'URL saisie ne correspond pas à votre site.']);
+                session()->flash('error', 'L\'URL saisie ne correspond à aucun profile.');
+                return redirect()->back();
             }
         } else {
-            return back()->withErrors(['error' => 'L\'URL saisie est invalide.']);
+            session()->flash('error', 'L\'URL saisie est invalide.');
+            return redirect()->back();
         }
     }
 

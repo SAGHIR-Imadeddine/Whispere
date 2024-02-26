@@ -27,6 +27,7 @@
             <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Envoyer un message</button>
         </div>
     </div>
+    @if(session('NewRequest'))
 
     <div x-data="{ open: true }">
         <div x-show="open" @click.away="open = false" class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
@@ -59,4 +60,5 @@
             </div>
         </div>
     </div>
+    @endif
 </div>
