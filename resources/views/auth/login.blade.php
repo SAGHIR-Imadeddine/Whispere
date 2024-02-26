@@ -2,11 +2,7 @@
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
-<<<<<<< HEAD
-    <form method="POST" action="{{ route('login') }}">
-=======
     <form method="POST" action="{{ route('login') }}" class="p-4 border-b-2">
->>>>>>> 64571dcbd66632e6cd6f5f2ba3dd18fe70964459
         @csrf
 
         <!-- Email Address -->
@@ -48,8 +44,6 @@
             </x-primary-button>
         </div>
     </form>
-<<<<<<< HEAD
-=======
 
     <div class="w-full p-4">
         <h2 class="text-center">Or log in with social account</h2>
@@ -59,5 +53,4 @@
                     
         </div>
     </div>
->>>>>>> 64571dcbd66632e6cd6f5f2ba3dd18fe70964459
 </x-guest-layout>

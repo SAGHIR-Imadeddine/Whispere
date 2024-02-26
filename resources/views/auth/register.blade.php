@@ -1,9 +1,4 @@
 <x-guest-layout>
-<<<<<<< HEAD
-    <form method="POST" action="{{ route('register') }}">
-        @csrf
-
-=======
     <form method="POST" action="{{ route('register') }}" enctype="multipart/form-data" >
         @csrf
         <div class="mb-3 space-y-2 w-full text-xs">
@@ -24,7 +19,6 @@
         </div>
 
         
->>>>>>> 64571dcbd66632e6cd6f5f2ba3dd18fe70964459
         <!-- Name -->
         <div>
             <x-input-label for="name" :value="__('Name')" />
@@ -43,14 +37,7 @@
         <div class="mt-4">
             <x-input-label for="password" :value="__('Password')" />
 
-<<<<<<< HEAD
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
-=======
             <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
->>>>>>> 64571dcbd66632e6cd6f5f2ba3dd18fe70964459
 
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
@@ -59,13 +46,7 @@
         <div class="mt-4">
             <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
 
-<<<<<<< HEAD
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
-=======
             <x-text-input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation" required autocomplete="new-password" />
->>>>>>> 64571dcbd66632e6cd6f5f2ba3dd18fe70964459
 
             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
         </div>
@@ -80,8 +61,4 @@
             </x-primary-button>
         </div>
     </form>
-<<<<<<< HEAD
 </x-guest-layout>
-=======
-</x-guest-layout>
->>>>>>> 64571dcbd66632e6cd6f5f2ba3dd18fe70964459
