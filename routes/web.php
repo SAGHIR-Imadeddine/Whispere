@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\ProviderController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\AcceptrequestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,5 +36,13 @@ Route::get('/chat', function () {
 // Socialite Routes
 Route::get('/auth/{provider}/redirect', [ProviderController::class, 'redirect']);
 Route::get('/auth/{provider}/callback', [ProviderController::class, 'callback']);
+
+
+
+
+// Route for accepting or deleting friend request
+Route::post('/accept-or-delete-request/{friendRequest}/{status}', [AcceptrequestController::class, 'acceptOrDeleteRequest'])->name('accept.or.delete.request');
+
+
 
 require __DIR__.'/auth.php';
