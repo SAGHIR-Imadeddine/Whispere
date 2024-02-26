@@ -11,7 +11,8 @@ class PusherController extends Controller
 {
     public function index()
     {
-        return view('index');
+        $messages = Message::all(); 
+        return view('chatt', ['messages' => $messages]);
     }
 
     public function broadcast(Request $request)
@@ -66,12 +67,22 @@ class PusherController extends Controller
 
     public function receive(Request $request)
     {
+        $message = $request->get('message', '');
+        $isImage = $request->get('isImage', false);
+        $latitude = $request->get('latitude');
+        $longitude = $request->get('longitude');
+    
         return view('receive', [
-            'message' => $request->get('message'),
-            'isImage' => $request->get('isImage', false),
-            // 'locationDetails' => "Location: $request->get('Longitude', false),  $request->get('latitude', false),"
+            'message' => $message,
+            'isImage' => $isImage,
+            'locationDetails' => ($latitude && $longitude) ? [
+                'text' => "Location: Latitude $latitude, Longitude $longitude",
+                'latitude' => $latitude,
+                'longitude' => $longitude,
+            ] : null,
         ]);
     }
+    
 //     public function broadcast(Request $request)
 // {
 //     $user = Auth::user(); // Assuming you are using authentication

@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\ProviderController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PusherController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,18 +22,24 @@ use App\Http\Controllers\ProfileController;
 // });
 
 
-Route::get('/', 'App\Http\Controllers\PusherController@index');
-Route::post('/broadcast', 'App\Http\Controllers\PusherController@broadcast');
-Route::post('/receive', 'App\Http\Controllers\PusherController@receive');
-Route::post('/broadcast-location', 'App\Http\Controllers\PusherController@broadcast');
-
-// Route::post('/broadcast-location', [PusherController::class, 'broadcastLocation']);
+// Route::get('/', 'App\Http\Controllers\PusherController@index');
+// Route::post('/broadcast', 'App\Http\Controllers\PusherController@broadcast');
+// Route::post('/receive', 'App\Http\Controllers\PusherController@receive');
+// Route::post('/broadcast-location', 'App\Http\Controllers\PusherController@broadcast');
 
 
+Route::get('/chatt', [PusherController::class, 'index']);
+Route::post('/broadcast', [PusherController::class, 'broadcast']);
+Route::post('/receive', [PusherController::class, 'receive']);
+Route::get('/fetch-messages', [PusherController::class, 'fetchMessages']);
+
+Route::post('/broadcast-location', [PusherController::class, 'broadcastLocation']);
 
 
-// Route::get('/chat', function () {
-//     return view('chat');
+
+
+// Route::get('/chatt', function () {
+//     return view('chatt');
 // });
 
 
