@@ -40,8 +40,11 @@ Route::get('/auth/{provider}/callback', [ProviderController::class, 'callback'])
 
 //////////////search//////////////////////
 
-Route::get('/search', [userController::class,'search'])->name('search');
-Route::post('/friendRequest/{user}', [Friend_requistController::class,'friendRequest'])->name('friendRequest');
+Route::get('/search', [userController::class, 'search'])->name('search');
+Route::post('/friendRequest/{user}', [Friend_requistController::class, 'friendRequest'])->name('friendRequest');
+
+Route::delete('/remove-friend-request/{user}', [Friend_requistController::class, 'removeFriendRequest'])->name('remove.friend.request');
 
 
-require __DIR__.'/auth.php';
+
+require __DIR__ . '/auth.php';

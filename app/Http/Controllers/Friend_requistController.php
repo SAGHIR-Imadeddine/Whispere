@@ -26,4 +26,14 @@ class Friend_requistController extends Controller
 
         return redirect()->back()->with('success', 'Friend request sent successfully.');
     }
+
+    public function removeFriendRequest(User $user)
+    {
+        FriendRequest::where([
+            'user_id' => Auth()->id(),
+            'friend_id' => $user->id,
+        ])->delete();
+
+        return redirect()->back()->with('success', 'Friend request removed successfully.');
+    }
 }
