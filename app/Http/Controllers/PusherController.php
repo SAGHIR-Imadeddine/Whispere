@@ -18,39 +18,41 @@ class PusherController extends Controller
     {
         $conversationId = 1;
         $userId = 1;
-
+    
         $message = $request->input('content', '');
         $isImage = $request->hasFile('image');
-
-
+    
         $latitude = $request->input('latitude');
         $longitude = $request->input('longitude');
-
+    
         if ($isImage) {
             $imagePath = $request->file('image')->store('photos', 'public');
             $mediaUrl = asset('storage/' . $imagePath);
         } else {
             $mediaUrl = null;
         }
-
-        // Save the message to the database
-        $newMessage = Message::create([
-            'conversation_id' => $conversationId,
-            'user_id' => $userId,
-            'content' => $message,
-            'media_url' => $mediaUrl,
-        ]);
-
-        if ($isImage) {
-            broadcast(new PusherBroadcast(null, $isImage))->toOthers();
-        } elseif ($latitude && $longitude) {
-            broadcast(new LocationBroadcast("Location: Latitude $latitude, Longitude $longitude", false))->toOthers();
-        } else {
-            broadcast(new PusherBroadcast($newMessage->content, null))->toOthers();
+    
+        // Create a new message only if either the message or the image is present
+        $newMessage = null;
+        if ($message || $isImage) {
+            $newMessage = Message::create([
+                'conversation_id' => $conversationId,
+                'user_id' => $userId,
+                'content' => $message,
+                'media_url' => $mediaUrl,
+            ]);
+    
+            if ($isImage) {
+                broadcast(new PusherBroadcast(null, $isImage))->toOthers();
+            } elseif ($latitude && $longitude) {
+                broadcast(new LocationBroadcast("Location: Latitude $latitude, Longitude $longitude", false))->toOthers();
+            } else {
+                broadcast(new PusherBroadcast($newMessage->content, null))->toOthers();
+            }
         }
-
+    
         return view('broadcast', [
-            'message' => $newMessage->content,
+            'message' => $newMessage ? $newMessage->content : null,
             'mediaUrl' => $mediaUrl,
             'locationDetails' => ($latitude && $longitude) ? [
                 'text' => "Location: Latitude $latitude, Longitude $longitude",
@@ -58,12 +60,8 @@ class PusherController extends Controller
                 'longitude' => $longitude,
             ] : null,
         ]);
-        // return view('broadcast', [
-        //     'message' => $newMessage->content,
-        //     'mediaUrl' => $mediaUrl,
-        //     'locationDetails' => ($latitude && $longitude) ? "Location: Latitude $latitude, Longitude $longitude" : null,
-        // ]);
     }
+    
 
 
     public function receive(Request $request)
