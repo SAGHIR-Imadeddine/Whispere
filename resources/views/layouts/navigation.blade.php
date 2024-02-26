@@ -39,7 +39,9 @@
 
                 </svg>
             </x-nav-link>
+            
         </div>
+        
         <!-- Uploaded to: SVG Repo, www.svgrepo.com, Transformed by: SVG Repo Mixer Tools -->
 
         <!-- Settings Dropdown -->
