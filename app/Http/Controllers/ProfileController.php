@@ -47,7 +47,7 @@ class ProfileController extends Controller
             //  $qrReader not an object when there is no qr found erreuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuur 
             if (is_object($qrReader) && method_exists($qrReader, 'text')) {
                 $decodedText = $qrReader->text();
-                return redirect()->away($decodedText);
+                return $this->searchByUrl($decodedText);
             } else {
                 session()->flash('error', 'Échec de la création de l\'objet QrReader.');
                 return redirect()->back();
@@ -68,7 +68,7 @@ class ProfileController extends Controller
         if ($request->has('profile_user')) {
             if (!$request->hasValidSignature()) {
                 session()->flash('error', 'L\'URL saisie est invalide.');
-                return view('chat');
+                return redirect()->back();
             };
 
             $userId = $request->input('profile_user');
@@ -149,8 +149,8 @@ class ProfileController extends Controller
             $allowedDomain = parse_url(config('app.url'), PHP_URL_HOST); // Récupérer le domaine de site à partir de la configuration
 
             if ($domain === $allowedDomain) {
-                // return redirect()->route('profile.edit')->with('url' , $url);
-                return redirect()->away($url);
+                return redirect()->route('profile.edit')->with('url' , $url);
+                // return redirect()->away($url);
             } else {
                 session()->flash('error', 'L\'URL saisie ne correspond à aucun profile.');
                 return redirect()->back();
