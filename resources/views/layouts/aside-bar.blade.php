@@ -87,6 +87,28 @@
                 </div>
             @endforeach
         </div>
+        <div class="flex flex-col mt-8">
+            <div class="flex flex-row items-center justify-between text-xs">
+                <span class="font-bold">Active Conversations</span>
+            </div>
+            @foreach ($friends as $friend)
+                <div class="flex items-center mt-2 gap-4">
+                    <div class="w-10 h-10 rounded-full overflow-hidden">
+                        <img class="w-full h-full object-cover" src="{{ asset('storage/' . $friend->profile_image) }}"
+                            alt="{{ $friend->name }}'s Profile Image">
+                    </div>
+                    <div class="font-medium flex gap-4 text-black">
+                        <form action="{{ route('profile.edit') }}" method="get">
+                            @csrf
+                            <input type="hidden" value="{{ $friend->id }}" name="profile_user">
+                            <button type="submit">
+                                {{ $friend->unique_identifier }}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            @endforeach
+        </div>
     @else
         <div class="flex flex-col mt-8">
             <div class="flex flex-row items-center justify-between text-xs">

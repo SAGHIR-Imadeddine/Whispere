@@ -18,11 +18,12 @@ class UserController extends Controller
             })
             ->get();
 
-        $friends = Conversation::where('user_id', auth()->id())
-            ->whereHas('friend', function ($query) use ($name) {
-                $query->where('unique_identifier', 'like', '%' . $name . '%');
-            })
+        $friends = Conversation::join('users', 'conversations.friend_id', '=', 'users.id')
+            ->where('conversations.user_id', auth()->id())
+            ->where('users.unique_identifier', 'like', '%' . $name . '%')
+            ->select('users.*')
             ->get();
+
 
         return view('chat', [
             'users' => $users,
