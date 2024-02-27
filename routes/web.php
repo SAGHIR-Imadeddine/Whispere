@@ -40,6 +40,9 @@ Route::get('/auth/{provider}/callback', [ProviderController::class, 'callback'])
 
 
 Route::get('/showrequests', [AcceptrequestController::class, 'friendRequestsPage'])->name('show.requests');
+Route::delete('/showrequests/{requestId}/{action}', [AcceptrequestController::class, 'refuseFriendRequest'])->name('delete.requests');
+// Route::post('/showrequests/{requestId}/accept',  [AcceptrequestController::class, 'refuseFriendRequest'])->name('accept.requests');
+
 
 // Route for accepting or deleting friend request
 Route::post('/accept-or-delete-request/{friendRequest}/{status}', [AcceptrequestController::class, 'acceptOrDeleteRequest'])->name('accept.or.delete.request');
