@@ -1,11 +1,9 @@
 <x-app-layout>
-
     <div class="flex flex-col md:flex-row h-screen antialiased text-gray-800">
-
         <div class="flex flex-col md:flex-row h-full w-full overflow-x-hidden">
             @include('layouts.aside-bar')
-
             <div class="flex flex-col flex-auto h-full p-6">
+                {{-- @foreach ($conversations as $conversation) --}}
                 <div class="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-gray-100 h-fit p-4">
                     <div class="flex flex-col h-full overflow-x-auto mb-4">
                         <div class="flex flex-col h-full">
@@ -23,54 +21,30 @@
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>
                                 @foreach ($messages as $message)
-                                    @if ($message->content != null)
-                                        <div class="col-start-6 col-end-13 p-3 rounded-lg">
-                                            <div class="flex items-center justify-start flex-row-reverse">
-                                                <div
-                                                    class="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0">
-                                                    A
-                                                </div>
-                                                <div
-                                                    class="relative mr-3 text-sm bg-indigo-100 py-2 px-4 shadow rounded-xl">
-                                                    <div>
-                                                        @include('broadcast', [
+                                    <div
+                                        class="col-start-{{ $message->user_id == Auth::id() ? '6' : '1' }} col-end-{{ $message->user_id == Auth::id() ? '13' : '8' }} p-3 rounded-lg">
+                                        <div
+                                            class="flex flex-{{ $message->user_id == Auth::id() ? 'row-reverse' : 'row' }} items-center">
+                                            <div
+                                                class="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0">
+                                                A
+                                            </div>
+                                            <div
+                                                class="relative {{ $message->user_id == Auth::id() ? 'mr-3' : 'ml-3' }}  text-sm bg-{{ $message->user_id == Auth::id() ? 'indigo-100' : 'white' }} py-2 px-4 shadow rounded-xl">
+                                                <div>
+                                                    @if ($message->content != null)
+                                                        @include('receive', [
                                                             'message' => $message->content,
                                                             'isImage' => $message->media_url != null,
                                                         ])
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @elseif ($message->media_url != null)
-                                        @if (in_array(pathinfo($message->media_url, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png', 'gif']))
-                                            <div class="col-start-6 col-end-13 p-3 rounded-lg">
-                                                <div class="flex items-center justify-start flex-row-reverse">
-                                                    <div
-                                                        class="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0">
-                                                        A
-                                                    </div>
-                                                    <div
-                                                        class="relative mr-3 text-sm bg-indigo-100 py-2 px-4 shadow rounded-xl">
-                                                        <div>
-                                                            <img class="w-[150px] h-auto" src="{{ $message->media_url }}" alt="Image">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @else
-                                            <div class="col-start-6 col-end-13 p-3 rounded-lg">
-                                                <div class="flex items-center justify-start flex-row-reverse">
-                                                    <div
-                                                        class="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0">
-                                                        A
-                                                    </div>
-                                                    <div
-                                                        class="relative mr-3 text-sm bg-indigo-100 py-2 px-4 shadow rounded-xl">
-                                                        <div>
-                                                            <div class="flex  gap-2.5">
+                                                    @elseif ($message->media_url != null)
+                                                        @if (in_array(pathinfo($message->media_url, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png', 'gif']))
+                                                            <img class="w-[150px] h-auto"
+                                                                src="{{ $message->media_url }}" alt="Image">
+                                                        @else
+                                                            <div class="flex gap-2.5">
                                                                 <div class="flex flex-col gap-1">
                                                                     <div
                                                                         class="flex flex-col w-full max-w-[326px] leading-1.5 p-4 border-gray-200 bg-gray-100 rounded-e-xl rounded-es-xl dark:bg-gray-700">
@@ -117,7 +91,6 @@
                                                                                     </svg>
                                                                                     your_file
                                                                                 </span>
-
                                                                             </div>
                                                                             <div
                                                                                 class="inline-flex self-center items-center">
@@ -141,21 +114,19 @@
 
                                                                             </div>
                                                                         </div>
-                                                                        {{-- <span class="text-sm font-normal text-gray-500 dark:text-gray-400">Delivered</span> --}}
                                                                     </div>
+                                                                    {{-- <span class="text-sm font-normal text-gray-500 dark:text-gray-400">Delivered</span> --}}
                                                                 </div>
-
                                                             </div>
-                                                        </div>
-                                                    </div>
+                                                        @endif
+                                                    @endif
                                                 </div>
                                             </div>
-                                        @endif
-                                    @endif
+                                        </div>
+                                    </div>
                                 @endforeach
                             </div>
                         </div>
-
                         <form id="chatForm" enctype="multipart/form-data">
                             {{ csrf_field() }}
                             <div id="card" class="hidden w-fit bg-blue-100 ml-2 rounded-sm flex gap-4 p-4">
@@ -175,19 +146,6 @@
                                         </svg>
                                     </label>
                                 </div>
-                                {{-- <div
-                                    class="flex items-center justify-center h-10 w-10 rounded-full bg-gray-100 flex-shrink-0">
-                                    <input type="file" id="image" name="image" accept="*/*" class="hidden" />
-                                    <label for="image" style="cursor: pointer;">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            viewBox="0 0 24 24" style="fill: rgba(65, 207, 239, 1);transform: ;msFilter:;">
-                                            <path
-                                                d="M19.903 8.586a.997.997 0 0 0-.196-.293l-6-6a.997.997 0 0 0-.293-.196c-.03-.014-.062-.022-.094-.033a.991.991 0 0 0-.259-.051C13.04 2.011 13.021 2 13 2H6c-1.103 0-2 .897-2 2v16c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2V9c0-.021-.011-.04-.013-.062a.952.952 0 0 0-.051-.259c-.01-.032-.019-.063-.033-.093zM16.586 8H14V5.414L16.586 8zM6 20V4h6v5a1 1 0 0 0 1 1h5l.002 10H6z">
-                                            </path>
-                                            <path d="M8 12h8v2H8zm0 4h8v2H8zm0-8h2v2H8z"></path>
-                                        </svg>
-                                    </label>
-                                </div> --}}
                                 <div
                                     class="flex items-center justify-center h-10 w-10 rounded-full bg-gray-100 flex-shrink-0">
                                     <button title="Share location" type="button" onclick="shareLocation()">
@@ -202,7 +160,6 @@
                                 </div>
                             </div>
                             <div class="flex items-center h-16 rounded-xl bg-white w-full px-4">
-
                                 <div>
                                     <button class=" flex items-center justify-center text-gray-400 hover:text-gray-600"
                                         onclick="toggleDiv(event)">
@@ -216,6 +173,8 @@
                                 </div>
                                 <input type="hidden" id="latitude" name="latitude" />
                                 <input type="hidden" id="longitude" name="longitude" />
+                                <input type="hidden" id="friend_id" name="friend_id" value="{{ $friend }}" />
+
                                 <div class="flex-grow ml-4">
                                     <div class="relative w-full">
                                         <input type="text" id="message" name="content"
@@ -238,96 +197,60 @@
                                         <span>Send</span>
                                         <span class="ml-2">
                                             <svg class="w-4 h-4 transform rotate-45 -mt-px" fill="none"
-                                                stroke="currentColor" viewBox="0 0 24 24"
+                                                stroke="currentColor" viewBox="0 0 20 20"
                                                 xmlns="http://www.w3.org/2000/svg">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                                                <path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
                                             </svg>
                                         </span>
                                     </button>
                                 </div>
                             </div>
                         </form>
-
                     </div>
                 </div>
+                {{-- @endforeach --}}
             </div>
-
-
         </div>
     </div>
-
-
     <script>
         function toggleDiv(event) {
             event.preventDefault();
             var myDiv = document.getElementById('card');
             myDiv.classList.toggle('hidden');
         }
-    </script>
 
-    <script>
-        const pusher = new Pusher('{{ config('broadcasting.connections.pusher.key') }}', {
-            cluster: 'eu'
-        });
-        const channel = pusher.subscribe('public');
-
-        // Share location function
-        function shareLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    function(position) {
-                        const latitude = position.coords.latitude;
-                        const longitude = position.coords.longitude;
-                        $("#latitude").val(latitude);
-                        $("#longitude").val(longitude);
-
-                        console.log("Location shared successfully");
-                        console.log('Received location:', latitude, longitude);
-
-                        // Trigger form submission
-                        $("form#chatForm").submit();
-                    },
-                    function(error) {
-                        console.error('Error getting location:', error.message);
-                    }
-                );
-            } else {
-                console.error('Geolocation is not supported by this browser.');
-            }
+        function createMessageElement(messageContent, isSent = true) {
+            const messageClass = isSent ? "right" : "left";
+            const avatarColorClass = isSent ? "bg-indigo-500" : "bg-green-500";
+            var messageElement = $("<div>").addClass(`col-start-6 col-end-13 p-3 rounded-lg ${messageClass}`);
+            var innerDivElement = $("<div>").addClass(
+                `flex items-center justify-start flex-row-${isSent ? 'reverse' : 'start'}`);
+            var avatarDivElement = $("<div>").addClass(
+                `flex items-center justify-center h-10 w-10 rounded-full ${avatarColorClass} flex-shrink-0`).text("A");
+            var contentDivElement = $("<div>").addClass("relative mr-3 text-sm bg-indigo-100 py-2 px-4 shadow rounded-xl");
+            contentDivElement.html("<div>" + messageContent + "</div>");
+            innerDivElement.append(avatarDivElement);
+            innerDivElement.append(contentDivElement);
+            messageElement.append(innerDivElement);
+            return messageElement;
         }
 
-        // Receive location messages
-        channel.bind('location', function(data) {
-            console.log('Received location:', data);
-            const {
-                latitude,
-                longitude,
-                text
-            } = data;
-            const mapContainerId = 'map_' + Date.now();
-            const locationMessage = `
-        <div class="right message">
-            <p>${text}</p>
-            <small>Latitude: ${latitude}, Longitude: ${longitude}</small>
-            <div id="${mapContainerId}" style="height: 150px;"></div>
-        </div>
-    `;
-            $(".messages").append(locationMessage);
-            const map = L.map(mapContainerId).setView([latitude, longitude], 15);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap contributors'
-            }).addTo(map);
-
-            L.marker([latitude, longitude]).addTo(map)
-                .bindPopup('Location').openPopup();
-            $(document).scrollTop($(document).height());
+        const pusher = new Pusher('{{ config('broadcasting.connections.pusher.key') }}', {
+            cluster: 'eu',
+            encrypted: true,
         });
+        const channelId = '{{ auth()->id() }}';
+        const channel = pusher.subscribe('private-chat.' + channelId);
 
         // Form submission
         $("form#chatForm").submit(function(event) {
             event.preventDefault();
+            console.log('Form submitted.');
+
             var formData = new FormData($(this)[0]);
+            var csrfToken = $('meta[name="csrf-token"]').attr('content');
+            formData.append('_token', csrfToken);
+
             $.ajax({
                 url: "/broadcast",
                 type: "POST",
@@ -338,6 +261,8 @@
                 contentType: false,
                 processData: false,
                 success: function(res) {
+                    console.log('Successfully processed form submission on the server:', res);
+
                     var newMessageElement = createMessageElement(res);
                     $(".messages").append(newMessageElement);
                     $("form #message").val('');
@@ -352,23 +277,87 @@
             });
         });
 
-        function createMessageElement(messageContent) {
 
-            var messageElement = $("<div>").addClass("col-start-6 col-end-13 p-3 rounded-lg");
-            var innerDivElement = $("<div>").addClass("flex items-center justify-start flex-row-reverse");
-            var avatarDivElement = $("<div>").addClass(
-                "flex items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0").text("A");
-            var contentDivElement = $("<div>").addClass("relative mr-3 text-sm bg-indigo-100 py-2 px-4 shadow rounded-xl");
+        // Receive messages
+        console.log('Before channel.bind');
 
-            // Customize this part based on your message structure
-            contentDivElement.html("<div>" + messageContent + "</div>");
+        channel.bind('chat', function(data) {
+            console.log('Received chat event:', data);
 
-            // Append the elements to construct the message structure
-            innerDivElement.append(avatarDivElement);
-            innerDivElement.append(contentDivElement);
-            messageElement.append(innerDivElement);
+            $.post("/receive", {
+                    _token: '{{ csrf_token() }}',
+                    message: data.message,
+                })
+                .done(function(res) {
+                    console.log('Successfully processed chat event on the server:', res);
 
-            return messageElement;
+                    const newMessageElement = createMessageElement(data.message, data.isImage);
+                    $(".messages").append(newMessageElement);
+                    $(document).scrollTop($(document).height());
+                })
+                .fail(function(error) {
+                    console.log('Error processing chat event on the server:', error);
+                });
+            console.log('After processing chat event');
+
+        });
+
+        console.log('After channel.bind');
+
+        // Share location function
+        function shareLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        const latitude = position.coords.latitude;
+                        const longitude = position.coords.longitude;
+                        console.log("Location shared successfully");
+                        console.log('Received location:', latitude, longitude);
+                        $("#latitude").val(latitude);
+                        $("#longitude").val(longitude);
+                        // Trigger form submission
+                        $("form#chatForm").submit();
+                    },
+                    function(error) {
+                        console.error('Error getting location:', error.message);
+                    }
+                );
+            } else {
+                console.error('Geolocation is not supported by this browser.');
+            }
         }
+
+
+        // Receive location messages
+        channel.bind('location', function(data) {
+            console.log('Received location event:', data);
+
+            const {
+                latitude,
+                longitude,
+                text
+            } = data;
+            const mapContainerId = 'map_' + Date.now();
+            const locationMessage = `
+                <div class="right message">
+                    <p>${text}</p>
+                    <small>Latitude: ${latitude}, Longitude: ${longitude}</small>
+                    <div id="${mapContainerId}" style="height: 150px;"></div>
+                </div>
+            `;
+            $(".messages").append(locationMessage);
+            const map = L.map(mapContainerId).setView([latitude, longitude], 15);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            L.marker([latitude, longitude]).addTo(map)
+                .bindPopup('Location').openPopup();
+            $(document).scrollTop($(document).height());
+        });
+
+        console.log('hello');
+
     </script>
+
 </x-app-layout>

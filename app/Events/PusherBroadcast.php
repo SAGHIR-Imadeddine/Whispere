@@ -24,7 +24,7 @@ class PusherBroadcast implements ShouldBroadcast
 
     public function broadcastOn(): array
     {
-        return ['public'];
+        return ['private-chat.' . auth()->id()];
     }
 
     public function broadcastAs(): string
