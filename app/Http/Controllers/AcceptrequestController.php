@@ -54,6 +54,72 @@ class AcceptrequestController extends Controller
 
 }
 
+public function acceptFriendRequest($requestId)
+{
+    
+    $friendRequest = FriendRequest::findOrFail($requestId);
+
+  
+    if ($friendRequest->friend_id !== auth()->id()) {
+        abort(403, 'Unauthorized action.');
+    }
+
+
+    $friendRequest->update(['request_status' => 'accepted']);
+
+  
+    $user = auth()->user();
+
+   
+    $friend = $friendRequest->user;
+
+    // $data = [$user->id, $friend];
+    $existingConvo = Conversation::where([
+        ['user_id', '=', $user->id],
+        ['friend_id', '=', $friend->id]
+    ])->orWhere([
+        ['user_id', '=', $friend->id],
+        ['friend_id', '=', $user->id]
+    ])->first();
+
+    // $conversations = Conversation::where(function ($query, $friend_id, $user_id) {
+    //     $friend_id = $friend;
+    //     $query->where('user_id', $user_id)
+    //           ->where('friend_id',  $friend_id);
+    // })->orWhere(function ($query, $friend_id, $user_id) {
+    //     $query->where('user_id', $friend_id)
+    //           ->where('friend_id', $user_id);
+    // })->get();
+
+    if($existingConvo){
+
+        // dd($existingConvo);
+        return redirect()->route('chat', ['conversationId' => $existingConvo->id]);
+    
+    }else{
+        $conversation = Conversation::create([
+        'user_id' => $user->id,
+        'friend_id' => $friend->id,
+        ]);
+    
+        return redirect()->route('chat', ['conversationId' => $conversation->id]);
+    }
+
+   
+//  dd($conversation);
+  
+    // $conversation->users()->attach();
+
+    
+    
+}
+
+
+
+
+
+
+
 // public function acceptFriendRequest($requestId)
 // {
 //     // Find the friend request
@@ -69,17 +135,29 @@ class AcceptrequestController extends Controller
 
 //     // Add both users as friends
 //     $user = auth()->user();
-//     $user->friends()->attach($friendRequest->user_id);
 //     $friend = $friendRequest->user;
-//     $friend->friends()->attach($user->id);
 
-//     // Create a new conversation
-//     $conversation = Conversation::create();
-//     $conversation->users()->attach([$user->id, $friend->id]);
+//     // Check if a conversation already exists between the users
+//     $conversation = $user->conversations()->whereHas('users', function ($query) use ($friend) {
+//         $query->where('user_id', $friend->id);
+//     })->first();
+
+//     if (!$conversation) {
+//         // If no conversation exists, create a new one
+//         $conversation = Conversation::create();
+//         $conversation->users()->attach([$user->id, $friend->id]);
+//     }
 
 //     // Redirect to the conversation page
 //     return redirect()->route('conversation.show', ['conversationId' => $conversation->id]);
 // }
+
+
+
+
+
+
+
 
 
 
