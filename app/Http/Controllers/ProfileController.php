@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\Conversation;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -43,7 +44,7 @@ class ProfileController extends Controller
 
 
         try {
-            $qrReader = new QrReader($imageContent, QrReader::SOURCE_TYPE_BLOB);
+            $qrReader = new QrReader($imageFile);
             //  $qrReader not an object when there is no qr found erreuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuur 
             if (is_object($qrReader) && method_exists($qrReader, 'text')) {
                 $decodedText = $qrReader->text();
@@ -85,6 +86,11 @@ class ProfileController extends Controller
                     $friendRequest->request_status = 'accepted';
                     $friendRequest->save();
                     session()->flash('NewRequest');
+
+                    $Conversation = new Conversation();
+                    $Conversation->user_id = auth()->id();
+                    $Conversation->friend_id = $userId;
+                    $Conversation->save();
                 }
 
                 $totalFriends = DB::table('friend_requests')

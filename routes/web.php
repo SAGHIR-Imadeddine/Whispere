@@ -1,11 +1,12 @@
 <?php
 
 use App\Http\Controllers\Auth\ProviderController;
+use App\Http\Controllers\Friend_requistController;
 use Illuminate\Support\Facades\Route;
-use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\ProfileController;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\ConversationController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -31,15 +32,19 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::post('/profile',[ProfileController::class , 'decodeQr'])->name('profile.decodeQr');
     Route::post('/SearchByLink',[ProfileController::class , 'searchByUrl'])->name('check-cache');
+    Route::post('/conversation', [ConversationController::class, 'show'])->name('conversation.show');
 });
-Route::get('/chat', function () {
-    return view('chat');
-})->name('chat');
+Route::get('/chat', [ConversationController::class, 'index'])->name('chat');
 // Socialite Routes
 Route::get('/auth/{provider}/redirect', [ProviderController::class, 'redirect']);
 Route::get('/auth/{provider}/callback', [ProviderController::class, 'callback']);
 
 
+Route::get('/search', [userController::class, 'search'])->name('search');
+Route::post('/friendRequest/{user}', [Friend_requistController::class, 'friendRequest'])->name('friendRequest');
+
+Route::delete('/remove-friend-request/{user}', [Friend_requistController::class, 'removeFriendRequest'])->name('remove.friend.request');
 
 
-require __DIR__.'/auth.php';
+
+require __DIR__ . '/auth.php';
