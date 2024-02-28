@@ -15,7 +15,7 @@ class AcceptrequestController extends Controller
     {
         
         $friendRequests = auth()->user()->receivedFriendRequests;
-
+     
         return view('friend-requests', compact('friendRequests'));
     }
 
