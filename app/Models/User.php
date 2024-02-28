@@ -57,7 +57,8 @@ class User extends Authenticatable
 
     public function receivedFriendRequests()
     {
-        return $this->hasMany(FriendRequest::class, 'friend_id');
+        return $this->hasMany(FriendRequest::class, 'friend_id')->where('request_status', 'pending')->get();
+
     }
 
     public function friends()

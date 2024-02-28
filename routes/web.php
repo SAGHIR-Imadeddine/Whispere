@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\ProviderController;
 use App\Http\Controllers\Friend_requistController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\AcceptrequestController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ConversationController;
 
@@ -38,6 +39,15 @@ Route::get('/chat', [ConversationController::class, 'index'])->name('chat');
 // Socialite Routes
 Route::get('/auth/{provider}/redirect', [ProviderController::class, 'redirect']);
 Route::get('/auth/{provider}/callback', [ProviderController::class, 'callback']);
+
+
+Route::get('/showrequests', [AcceptrequestController::class, 'friendRequestsPage'])->name('show.requests');
+Route::delete('/showrequests/{requestId}/{action}', [AcceptrequestController::class, 'refuseFriendRequest'])->name('delete.requests');
+// Route::post('/showrequests/{requestId}/accept',  [AcceptrequestController::class, 'refuseFriendRequest'])->name('accept.requests');
+
+
+// Route for accepting or deleting friend request
+Route::post('/accept-or-delete-request/{friendRequest}/{status}', [AcceptrequestController::class, 'acceptOrDeleteRequest'])->name('accept.or.delete.request');
 
 
 Route::get('/search', [userController::class, 'search'])->name('search');

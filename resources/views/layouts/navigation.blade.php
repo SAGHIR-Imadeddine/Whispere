@@ -19,8 +19,12 @@
             </x-nav-link>
         </div>
 
+
+
+        {{-- ////////////////////////////////////////////// --}}
+
         <div class="space-y-6 mx-auto">
-            <x-nav-link :href="route('chat')" :active="request()->routeIs('chat')">
+            <x-nav-link :href="route('show.requests')" :active="request()->routeIs('show.requests')">
                 <svg fill="#ffffff" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="30px" height="30px" viewBox="0 0 45.902 45.902" xml:space="preserve">
 
                     <g id="SVGRepo_bgCarrier" stroke-width="0" />
@@ -38,8 +42,12 @@
                     </g>
 
                 </svg>
+
             </x-nav-link>
+
         </div>
+
+
         <!-- Uploaded to: SVG Repo, www.svgrepo.com, Transformed by: SVG Repo Mixer Tools -->
 
         <!-- Settings Dropdown -->
