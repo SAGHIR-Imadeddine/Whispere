@@ -24,7 +24,6 @@ class UserController extends Controller
             ->select('users.*')
             ->get();
 
-
         return view('chat', [
             'users' => $users,
             'friends' => $friends,

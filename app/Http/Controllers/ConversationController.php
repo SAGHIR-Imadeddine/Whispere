@@ -12,16 +12,21 @@ class ConversationController extends Controller
 {
     public function index()
     {
-        $friends =  Conversation::where('user_id', auth()->user()->id)
-        ->orWhere('friend_id', auth()->user()->id)
-        ->with('friend') // Charger la relation avec l'utilisateur ami
-        ->get();
-        return view('chat', ['friends' => $friends]);
+        $conversations = Conversation::where('user_id', auth()->id())
+            ->orWhere('friend_id', auth()->id())        
+            ->with(['user', 'friend'])
+            ->get();
+    
+        foreach ($conversations as $conversation) {
+            $conversation->is_user = ($conversation->user_id == auth()->id()) ? 1 : 0;
+        }
+    
+        return view('chat', compact('conversations'));
     }
+    
     public function show(Request $request)
     {
         $friend = $request->input('friend');
-        // Récupérer la conversation entre l'utilisateur authentifié et l'ami
         $conversation = Conversation::where('user_id', auth()->id())
             ->where('friend_id', $friend)
             ->orWhere('user_id', $friend)
@@ -33,16 +38,12 @@ class ConversationController extends Controller
             ->select('users.*')
             ->get();
 
-        // Vérifier si la conversation existe
         if ($conversation) {
-            // Récupérer les messages de la conversation
             $messages = $conversation->messages;
         } else {
-            // Si aucune conversation n'existe, initialiser $messages à null ou à un tableau vide, selon vos besoins
-            $messages = null; // ou $messages = [];
+            $messages = null; 
         }
 
-        // Passer les messages à la vue
         return view('chat', [
             'friend' => $friend,
             'friends' => $friends,

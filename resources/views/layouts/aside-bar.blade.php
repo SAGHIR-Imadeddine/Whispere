@@ -114,20 +114,20 @@
         @foreach ($friends as $conversation)
         <div class="flex items-center mt-2 gap-4">
             <div class="w-10 h-10 rounded-full overflow-hidden">
-                @if($conversation->friend->profile_image)
-                <img class="w-full h-full object-cover" src="{{ asset('storage/' . $conversation->friend->profile_image) }}" alt="{{ $conversation->friend->name }}'s Profile Image">
+                @if($conversation->profile_image)
+                <img class="w-full h-full object-cover" src="{{ asset('storage/' . $conversation->profile_image) }}" alt="{{ $conversation->name }}'s Profile Image">
                 @else
                 <div class="flex items-center justify-center h-8 w-8 bg-indigo-200 rounded-full">
-                    {{ substr($conversation->friend->name, 0, 1) }}
+                    {{ substr($conversation->name, 0, 1) }}
                 </div>
                 @endif
             </div>
             <div class="font-medium flex gap-4 text-black">
                 <form action="{{ route('profile.edit') }}" method="get">
                     @csrf
-                    <input type="hidden" value="{{ $conversation->friend->id }}" name="profile_user">
+                    <input type="hidden" value="{{ $conversation->id }}" name="profile_user">
                     <button type="submit">
-                        {{ $conversation->friend->unique_identifier }}
+                        {{ $conversation->unique_identifier }}
                     </button>
                 </form>
             </div>
@@ -141,28 +141,41 @@
             <span class="font-bold">Active Conversations</span>
             <span class="flex items-center justify-center bg-gray-300 h-4 w-4 rounded-full">4</span>
         </div>
-        
-        @foreach ($friends as $conversation)
+        @if(isset($conversations))
+    @foreach ($conversations as $conversation)
         <div class="flex items-center mt-2 gap-4">
             <div class="w-10 h-10 rounded-full overflow-hidden">
-                @if($conversation->friend->profile_image)
-                <img class="w-full h-full object-cover" src="{{ asset('storage/' . $conversation->friend->profile_image) }}" alt="{{ $conversation->friend->name }}'s Profile Image">
+                @if( !$conversation->is_user && $conversation->user->profile_image  )
+                    <img class="w-full h-full object-cover" src="{{ asset('storage/' . $conversation->user->profile_image) }}" alt="{{ $conversation->user->name }}'s Profile Image">
+                @elseif($conversation->is_user && $conversation->friend->profile_image  )
+                    <img class="w-full h-full object-cover" src="{{ asset('storage/' . $conversation->friend->profile_image) }}" alt="{{ $conversation->friend->name }}'s Profile Image">
                 @else
-                <div class="flex items-center justify-center h-8 w-8 bg-indigo-200 rounded-full">
-                    {{ substr($conversation->friend->name, 0, 1) }}
-                </div>
+                    <div class="flex items-center justify-center h-8 w-8 bg-indigo-200 rounded-full">
+                        @if($conversation->is_user)
+                            {{ substr($conversation->user->name, 0, 1) }}
+                        @else
+                            {{ substr($conversation->friend->name, 0, 1) }}
+                        @endif
+                    </div>
                 @endif
             </div>
             <div class="font-medium flex gap-4 text-black">
                 <form action="{{ route('conversation.show') }}" method="POST">
                     @csrf
-                    <input type="hidden" value="{{$conversation->friend->id}}" name="friend">
-                    <button type="submit">{{ $conversation->friend->unique_identifier }}</button>
+                    <input type="hidden" value="{{$conversation->id}}" name="friend">
+                    <button type="submit">
+                        @if($conversation->is_user)
+                            {{ $conversation->friend->unique_identifier }}
+                        @else
+                            {{ $conversation->user->unique_identifier }}
+                        @endif
+                    </button>
                 </form>
-
             </div>
         </div>
-        @endforeach
+    @endforeach
+@endif
+
     </div>
     @endif
 </div>
