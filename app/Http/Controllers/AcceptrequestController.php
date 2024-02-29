@@ -14,7 +14,7 @@ class AcceptrequestController extends Controller
     public function friendRequestsPage()
     {
         // Récupérer uniquement les demandes d'amis en attente
-        $friendRequests = auth()->User()->receivedFriendRequests();
+        $friendRequests = auth()->User()->receivedFriendRequests;
     
         return view('friend-requests', compact('friendRequests'));
     }
