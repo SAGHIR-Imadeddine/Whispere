@@ -1,7 +1,8 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TestController;
+use App\Http\Controllers\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,6 +17,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+});
+Route::get('/test',[TestController::class, 'test']);
+Route::view('/ayoub','checkingWebSocket');
+Route::post('/chat-message',function(Illuminate\Http\Request $request){
+    event(new App\Events\ChatMessageEvent($request->message, auth()->user()));
+    return null;
 });
 
 Route::get('/dashboard', function () {
