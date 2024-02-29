@@ -181,6 +181,9 @@
                                 @isset($friend)
                                     <input type="hidden" id="friend_id" name="friend_id" value="{{ $friend }}" />
                                 @endisset
+                                @isset($conversation)
+                                <input type="hidden" id="conversation_id" name="conversation_id" value="{{ $conversation->id }}" />
+                                @endisset
 
                                 <div class="flex-grow ml-4">
                                     <div class="relative w-full">

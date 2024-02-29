@@ -92,7 +92,7 @@ public function acceptFriendRequest($requestId)
     if($existingConvo){
 
         // dd($existingConvo);
-        return redirect()->route('chat', ['conversationId' => $existingConvo->id]);
+        return redirect()->route('chatt', ['conversationId' => $existingConvo->id]);
     
     }else{
         $conversation = Conversation::create([
@@ -100,7 +100,7 @@ public function acceptFriendRequest($requestId)
         'friend_id' => $friend->id,
         ]);
     
-        return redirect()->route('chat', ['conversationId' => $conversation->id]);
+        return redirect()->route('chatt', ['conversationId' => $conversation->id]);
     }
 
    

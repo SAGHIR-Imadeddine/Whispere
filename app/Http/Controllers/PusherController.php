@@ -54,22 +54,20 @@ class PusherController extends Controller
 
     public function show(Request $request)
     {
+        $conversation_id = $request->input('friend');
         $friend = $request->input('friend');
-        $conversation = Conversation::where('user_id', auth()->id())
-            ->where('friend_id', $friend)
-            ->orWhere('user_id', $friend)
-            ->where('friend_id', auth()->id())
-            ->first();
-
-        $friends = Conversation::join('users', 'conversations.friend_id', '=', 'users.id')
-            ->where('conversations.user_id', auth()->id())
-            ->select('users.*')
-            ->get();
+       
+        $conversation = Conversation::findOrFail(intval($conversation_id));
+       
         if ($conversation) {
             $messages = $conversation->messages;
         } else {
             $messages = null;
         }
+        $friends = Conversation::join('users', 'conversations.friend_id', '=', 'users.id')
+            ->where('conversations.user_id', auth()->id())
+            ->select('users.*')
+            ->get();
         $conversations = Conversation::where('user_id', auth()->id())
             ->orWhere('friend_id', auth()->id())
             ->with(['user', 'friend'])
@@ -78,11 +76,13 @@ class PusherController extends Controller
         foreach ($conversations as $conversation) {
             $conversation->is_user = ($conversation->user_id == auth()->id()) ? 1 : 0;
         }
+        // dd($conversation->id);
 
         return view('chatt', [
             'friend' => $friend,
-            'friends' => $friends,
+           'friends' => $friends,
             'messages' => $messages,
+            'conversation'=>$conversation,
             'conversations'=>$conversations
         ]);
     }
@@ -91,7 +91,7 @@ class PusherController extends Controller
     {
         $user = Auth::user();
         $friendId = $request->input('friend_id', null);
-
+        $ConversationId = $request->input('conversation_id', null);
         if (!$friendId || $friendId == $user->id) {
             return response()->json(['error' => 'Invalid friend_id'], 400);
         }
@@ -119,7 +119,8 @@ class PusherController extends Controller
         $newMessage = null;
 
         if ($messageContent || $isImage) {
-            $newMessage = $conversation->messages()->create([
+            $newMessage = Message::create([
+                'conversation_id' => $ConversationId,
                 'user_id' => $user->id,
                 'content' => $messageContent,
                 'media_url' => $mediaUrl,

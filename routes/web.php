@@ -48,7 +48,6 @@ Route::middleware('auth')->group(function () {
 });
 
 // Route::get('/chat', [ConversationController::class, 'index'])->name('chat');
-Route::get('/search', [UserController::class, 'search'])->name('search');
 Route::post('/friendRequest/{user}', [Friend_requistController::class, 'friendRequest'])->name('friendRequest');
 
 Route::delete('/remove-friend-request/{user}', [Friend_requistController::class, 'removeFriendRequest'])->name('remove.friend.request');
@@ -66,7 +65,6 @@ Route::delete('/showrequests/{requestId}/{action}', [AcceptrequestController::cl
 Route::post('/showrequests/{requestId}/{action}',  [AcceptrequestController::class, 'acceptFriendRequest'])->name('accept.requests');
 
 
-// Route for accepting or deleting friend request
 Route::post('/accept-or-delete-request/{friendRequest}/{status}', [AcceptrequestController::class, 'acceptOrDeleteRequest'])->name('accept.or.delete.request');
 
 
