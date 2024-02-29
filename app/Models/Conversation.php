@@ -21,6 +21,7 @@ class Conversation extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+
     public function friend()
     {
         return $this->belongsTo(User::class, 'friend_id');
@@ -34,4 +35,5 @@ class Conversation extends Model
     {
         return $this->hasMany(Message::class);
     }
+    
 }
