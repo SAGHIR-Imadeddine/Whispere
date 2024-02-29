@@ -7,12 +7,14 @@
     "require": {
         "php": "^8.1",
         "beyondcode/laravel-websockets": "^1.14",
+        "bacon/bacon-qr-code": "^2.0",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
         "laravel/socialite": "^5.12",
         "laravel/tinker": "^2.8",
         "pusher/pusher-php-server": "^7.2",
+        "libern/qr-code-reader": "^1.0",
         "simplesoftwareio/simple-qrcode": "^4.2"
     },
     "require-dev": {

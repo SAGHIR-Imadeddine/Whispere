@@ -37,7 +37,6 @@ class PusherController extends Controller
     return response($response);
 }
 
-
     public function index()
     {
         $friends = Conversation::join('users', function ($join) {

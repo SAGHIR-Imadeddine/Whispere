@@ -3,8 +3,13 @@
 
         <div class="flex items-center space-x-4">
             <div class="w-16 h-16 rounded-full overflow-hidden">
-                <img src="{{asset('storage/'. auth()->user()->profile_image)}}" alt="Image de profil" class="w-full h-full object-cover">
-            </div>
+            @if(auth()->user()->profile_image)
+                            <img src="{{ asset('storage/' . auth()->user()->profile_image) }}" alt="Image de profil" class="w-full h-full object-cover rounded-full">
+                            @else
+                            <div class="flex items-center justify-center h-16 w-16 bg-indigo-200 rounded-full">
+                                {{ substr(auth()->user()->name, 0, 1) }}
+                            </div>
+                            @endif            </div>
             <div>
                 <div class="font-semibold text-lg">{{auth()->user()->unique_identifier}}</div>
                 <div class="text-gray-500">{{auth()->user()->name}}</div>

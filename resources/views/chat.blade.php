@@ -1,5 +1,4 @@
 <x-app-layout>
-
     <div class="flex flex-col md:flex-row h-screen antialiased text-gray-800">
 
         <div class="flex flex-col md:flex-row h-full w-full overflow-x-hidden">

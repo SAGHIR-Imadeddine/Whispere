@@ -1,8 +1,14 @@
 <div class="flex justify-center items-center w-full">
-    <div class="bg-white rounded-lg shadow-xl p-8 max-w-xl w-full">
+    <div class="bg-white rounded-lg shadow-xl p-8  w-90">
         <div class="flex flex-col items-center">
             <div class="w-32 h-32 rounded-full overflow-hidden">
-                <img src="{{ asset('storage/' . $user->profile_image) }}" alt="Image de profil" class="w-full h-full object-cover">
+                @if($user->profile_image)
+                <img src="{{ asset('storage/' . $user->profile_image) }}" alt="Image de profil" class="w-full h-full object-cover rounded-full">
+                @else
+                <div class="flex items-center justify-center h-32 w-32  text-bold text-xl bg-indigo-200 rounded-full">
+                    {{ substr($user->name, 0, 1) }}
+                </div>
+                @endif
             </div>
             <div class="font-semibold text-lg">{{ $user->unique_identifier }}</div>
             <div class="text-gray-500">{{ $user->name }}</div>
@@ -21,6 +27,7 @@
             <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Envoyer un message</button>
         </div>
     </div>
+    @if(session('NewRequest'))
 
     <div x-data="{ open: true }">
         <div x-show="open" @click.away="open = false" class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
@@ -53,4 +60,5 @@
             </div>
         </div>
     </div>
+    @endif
 </div>

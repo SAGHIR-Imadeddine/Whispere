@@ -14,49 +14,36 @@ class ConversationController extends Controller
 {
     public function index()
     {
-        $friends = Conversation::join('users', function ($join) {
-                $join->on('conversations.friend_id', '=', 'users.id')
-                    ->where('conversations.user_id', '=', auth()->id())
-                    ->orWhere(function ($query) {
-                        $query->where('conversations.user_id', '=', auth()->id())
-                            ->orWhere('conversations.friend_id', '=', auth()->id());
-                    });
-            })
-            ->select('users.*')
+        $conversations = Conversation::where('user_id', auth()->id())
+            ->orWhere('friend_id', auth()->id())        
+            ->with(['user', 'friend'])
             ->get();
     
-        return view('chat', ['friends' => $friends]);
+        foreach ($conversations as $conversation) {
+            $conversation->is_user = ($conversation->user_id == auth()->id()) ? 1 : 0;
+        }
+    
+        return view('chat', compact('conversations'));
     }
-    
-
-    
-    
-    
     
     public function show(Request $request)
     {
         $friend = $request->input('friend');
-        $conversation = Conversation::where(function ($query) use ($friend) {
-            $query->where('user_id', auth()->id())
-                  ->where('friend_id', $friend);
-        })->orWhere(function ($query) use ($friend) {
-            $query->where('user_id', $friend)
-                  ->where('friend_id', auth()->id());
-        })->first();
-        
-        $friends = Conversation::join('users', function ($join) {
-            $join->on('conversations.friend_id', '=', 'users.id')
-                ->where('conversations.user_id', auth()->id())
-                ->orWhere('conversations.friend_id', auth()->id());
-        })
-        ->select('users.*')
-        ->get();
-        
+        $conversation = Conversation::where('user_id', auth()->id())
+            ->where('friend_id', $friend)
+            ->orWhere('user_id', $friend)
+            ->where('friend_id', auth()->id())
+            ->first();
 
-            if ($conversation) {
-                $messages = $conversation->messages;
+        $friends = Conversation::join('users', 'conversations.friend_id', '=', 'users.id')
+            ->where('conversations.user_id', auth()->id())
+            ->select('users.*')
+            ->get();
+
+        if ($conversation) {
+            $messages = $conversation->messages;
         } else {
-            $messages = null; // ou $messages = [];
+            $messages = null; 
         }
 
         return view('chat', [

@@ -7,7 +7,7 @@ function displayImage(onlabel, inInput) {
     if (file) {
         var reader = new FileReader();
 
-        reader.onload = function(e) {
+        reader.onload = function (e) {
             label.style.backgroundImage = 'url(' + e.target.result + ')';
             label.style.backgroundSize = 'cover';
             label.style.backgroundPosition = 'center';
@@ -18,3 +18,4 @@ function displayImage(onlabel, inInput) {
         reader.readAsDataURL(file);
     }
 }
+

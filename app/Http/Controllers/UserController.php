@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Conversation;
-use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\User;
+use App\Models\Conversation;
 
 class UserController extends Controller
 {
@@ -23,7 +23,6 @@ class UserController extends Controller
             ->where('users.unique_identifier', 'like', '%' . $name . '%')
             ->select('users.*')
             ->get();
-
 
         return view('chat', [
             'users' => $users,
