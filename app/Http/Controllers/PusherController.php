@@ -87,14 +87,17 @@ class PusherController extends Controller
     public function broadcast(Request $request)
     {
         $user = Auth::user();
-        $friendId = $request->input('friend_id', null); 
-    if (!$friendId || $friendId == $user->id) {
-        return response()->json(['error' => 'Invalid friend_id'], 400);
-    }
+        $friendId = $request->input('friend_id', null);
+    
+        if (!$friendId || $friendId == $user->id) {
+            return response()->json(['error' => 'Invalid friend_id'], 400);
+        }
+    
         $messageContent = $request->input('content', '');
         $isImage = $request->hasFile('image');
         $latitude = $request->input('latitude');
         $longitude = $request->input('longitude');
+    
         $conversation = Conversation::where(function ($query) use ($user, $friendId) {
             $query->where('user_id', $user->id)
                   ->where('friend_id', $friendId);
@@ -102,36 +105,32 @@ class PusherController extends Controller
             $query->where('user_id', $friendId)
                   ->where('friend_id', $user->id);
         })->firstOrNew();
-        
-        // If the conversation is new (not found), set the 'friend_id' and save
-        // if ($conversation->isNew()) {
-        //     $conversation->friend_id = $friendId;
-        //     $conversation->save();
-        // }
-        
+    
         if ($isImage) {
             $imagePath = $request->file('image')->store('photos', 'public');
             $mediaUrl = asset('storage/' . $imagePath);
         } else {
             $mediaUrl = null;
         }
+    
         $newMessage = null;
+    
         if ($messageContent || $isImage) {
             $newMessage = $conversation->messages()->create([
                 'user_id' => $user->id,
                 'content' => $messageContent,
                 'media_url' => $mediaUrl,
             ]);
-
-            if ($isImage) {
-                broadcast(new PusherBroadcast(null, $isImage, $friendId))->toOthers();
-            } elseif ($latitude && $longitude) {
-                broadcast(new LocationBroadcast("Location: Latitude $latitude, Longitude $longitude", false, $friendId))->toOthers();
-            } else {
-                broadcast(new PusherBroadcast($newMessage->content, null, $friendId))->toOthers();
-            }
+    
+            broadcast(new PusherBroadcast($newMessage->content, $isImage, $friendId))->toOthers();
+    
+            // if ($latitude && $longitude) {
+            //     broadcast(new LocationBroadcast("Location: Latitude $latitude, Longitude $longitude", false, $friendId))->toOthers();
+            // }
+    
             info('Broadcasted event to friendId: ' . $friendId);
         }
+    
         return view('broadcast', [
             'message' => $newMessage ? $newMessage->content : null,
             'mediaUrl' => $mediaUrl,
@@ -142,7 +141,7 @@ class PusherController extends Controller
             ] : null,
         ]);
     }
-
+    
     public function receive(Request $request)
     {
         $message = $request->get('message', '');
