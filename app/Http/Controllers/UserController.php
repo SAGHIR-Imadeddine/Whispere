@@ -10,20 +10,17 @@ class UserController extends Controller
 {
     public function search(Request $request)
     {
-        $name = $request->input('unique_identifier');
+        $identifier = $request->input('unique_identifier');
 
-        $users = User::where('unique_identifier', 'like', '%' . $name . '%')
-            ->whereDoesntHave('conversations', function ($query) {
-                $query->where('friend_id', auth()->id());
-            })
+        $friendIds = Conversation::where('user_id', auth()->id())->pluck('friend_id');
+
+        $friends = User::whereIn('id', $friendIds)
+            ->where('unique_identifier', 'like', '%' . $identifier . '%')
             ->get();
 
-        $friends = Conversation::join('users', 'conversations.friend_id', '=', 'users.id')
-            ->where('conversations.user_id', auth()->id())
-            ->where('users.unique_identifier', 'like', '%' . $name . '%')
-            ->select('users.*')
+        $users = User::where('unique_identifier', 'like', '%' . $identifier . '%')
+            ->whereNotIn('id', $friendIds)
             ->get();
-
 
         return view('chat', [
             'users' => $users,
