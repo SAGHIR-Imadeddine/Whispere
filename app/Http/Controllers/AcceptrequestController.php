@@ -15,13 +15,12 @@ class AcceptrequestController extends Controller
     {
         // Récupérer uniquement les demandes d'amis en attente
         $friendRequests = auth()->User()->receivedFriendRequests;
-    
         return view('friend-requests', compact('friendRequests'));
     }
     
     
     public function refuseFriendRequest($requestId, $action)
-{
+    {
     
     $friendRequest = FriendRequest::findOrFail($requestId);
 

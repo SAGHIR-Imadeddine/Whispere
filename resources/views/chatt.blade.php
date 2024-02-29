@@ -249,6 +249,33 @@
         const channelId = '{{ auth()->id() }}';
         const channel = pusher.subscribe('private-chat.' + channelId);
 
+
+        // Receive messages
+        console.log('Before channel.bind');
+
+        channel.bind('chat', function(data) {
+            console.log('Received chat event:', data);
+
+            $.post("/receive", {
+                    _token: '{{ csrf_token() }}',
+                    message: data.message,
+                })
+                .done(function(res) {
+                    console.log('Successfully processed chat event on the server:', res);
+
+                    const newMessageElement = createMessageElement(data.message, data.isImage);
+                    $(".messages").append(newMessageElement);
+                    $(document).scrollTop($(document).height());
+                })
+                .fail(function(error) {
+                    console.log('Error processing chat event on the server:', error);
+                });
+            console.log('After processing chat event');
+
+        });
+
+        console.log('After channel.bind');
+
         // Form submission
         $("form#chatForm").submit(function(event) {
             event.preventDefault();
@@ -283,33 +310,6 @@
                 }
             });
         });
-
-
-        // Receive messages
-        console.log('Before channel.bind');
-
-        channel.bind('chat', function(data) {
-            console.log('Received chat event:', data);
-
-            $.post("/receive", {
-                    _token: '{{ csrf_token() }}',
-                    message: data.message,
-                })
-                .done(function(res) {
-                    console.log('Successfully processed chat event on the server:', res);
-
-                    const newMessageElement = createMessageElement(data.message, data.isImage);
-                    $(".messages").append(newMessageElement);
-                    $(document).scrollTop($(document).height());
-                })
-                .fail(function(error) {
-                    console.log('Error processing chat event on the server:', error);
-                });
-            console.log('After processing chat event');
-
-        });
-
-        console.log('After channel.bind');
 
         // Share location function
         function shareLocation() {
@@ -364,7 +364,6 @@
         });
 
         console.log('hello');
-
     </script>
 
 </x-app-layout>

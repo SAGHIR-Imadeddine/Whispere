@@ -57,7 +57,7 @@ class User extends Authenticatable
 
     public function receivedFriendRequests()
     {
-        return $this->hasMany(FriendRequest::class, 'friend_id')->where('request_status', 'pending')->get();
+        return $this->hasMany(FriendRequest::class, 'friend_id'); //->where('request_status', 'pending')->get();
 
     }
 
@@ -68,19 +68,7 @@ class User extends Authenticatable
     }
 
     public function conversations()
-<<<<<<< HEAD
-{
-    return $this->belongsToMany(User::class, 'conversations', 'user_id', 'friend_id');
-}
-
-public function messages()
-{
-    return $this->hasMany(Message::class);
-}
-
-=======
     {
         return $this->hasMany(Conversation::class, 'user_id');
     }
->>>>>>> 8d24a73f8d527f63a50427972d6f34d8a343da4c
 }

@@ -44,11 +44,8 @@
             </x-primary-button>
         </div>
     </form>
-<<<<<<< HEAD
-=======
 
 
->>>>>>> 8d24a73f8d527f63a50427972d6f34d8a343da4c
 
     <div class="w-full p-4">
         <h2 class="text-center text-bold">Or</h2>
@@ -87,8 +84,4 @@
             </a>
         </div>
     </div>
-<<<<<<< HEAD
 </x-guest-layout>
-=======
-</x-guest-layout>
->>>>>>> 8d24a73f8d527f63a50427972d6f34d8a343da4c

@@ -16,70 +16,74 @@ class PusherController extends Controller
 
 
     public function authenticate(Request $request)
-{
-    $socketId = $request->input('socket_id');
-    $user = auth()->user();
-    
-    $channelName = 'private-chat.' . $user->id;
+    {
+        $socketId = $request->input('socket_id');
+        $user = auth()->user();
 
-    $pusher = new Pusher(
-        config('broadcasting.connections.pusher.key'),
-        config('broadcasting.connections.pusher.secret'),
-        config('broadcasting.connections.pusher.app_id'),
-        [
-            'cluster' => config('broadcasting.connections.pusher.options.cluster'),
-            'encrypted' => true,
-        ]
-    );
+        $channelName = 'private-chat.' . $user->id;
 
-    $response = $pusher->socket_auth($channelName, $socketId);
+        $pusher = new Pusher(
+            config('broadcasting.connections.pusher.key'),
+            config('broadcasting.connections.pusher.secret'),
+            config('broadcasting.connections.pusher.app_id'),
+            [
+                'cluster' => config('broadcasting.connections.pusher.options.cluster'),
+                'encrypted' => true,
+            ]
+        );
 
-    return response($response);
-}
+        $response = $pusher->socket_auth($channelName, $socketId);
+
+        return response($response);
+    }
+
 
     public function index()
     {
-        $friends = Conversation::join('users', function ($join) {
-            $join->on('conversations.friend_id', '=', 'users.id')
-                ->where('conversations.user_id', '=', auth()->id())
-                ->orWhere(function ($query) {
-                    $query->where('conversations.user_id', '=', auth()->id())
-                        ->orWhere('conversations.friend_id', '=', auth()->id());
-                });
-        })
-            ->select('users.*')
+        $conversations = Conversation::where('user_id', auth()->id())
+            ->orWhere('friend_id', auth()->id())
+            ->with(['user', 'friend'])
             ->get();
 
-        return view('chatt', ['friends' => $friends]);
+        foreach ($conversations as $conversation) {
+            $conversation->is_user = ($conversation->user_id == auth()->id()) ? 1 : 0;
+        }
+
+        return view('chatt', compact('conversations'));
     }
 
     public function show(Request $request)
     {
         $friend = $request->input('friend');
-        $conversation = Conversation::where(function ($query) use ($friend) {
-            $query->where('user_id', auth()->id())
-                ->where('friend_id', $friend);
-        })->orWhere(function ($query) use ($friend) {
-            $query->where('user_id', $friend)
-                ->where('friend_id', auth()->id());
-        })->first();
+        $conversation = Conversation::where('user_id', auth()->id())
+            ->where('friend_id', $friend)
+            ->orWhere('user_id', $friend)
+            ->where('friend_id', auth()->id())
+            ->first();
 
-        $friends = Conversation::join('users', function ($join) {
-            $join->on('conversations.friend_id', '=', 'users.id')
-                ->where('conversations.user_id', auth()->id())
-                ->orWhere('conversations.friend_id', auth()->id());
-        })
+        $friends = Conversation::join('users', 'conversations.friend_id', '=', 'users.id')
+            ->where('conversations.user_id', auth()->id())
             ->select('users.*')
             ->get();
         if ($conversation) {
             $messages = $conversation->messages;
         } else {
-            $messages = null; // ou $messages = [];
+            $messages = null;
         }
+        $conversations = Conversation::where('user_id', auth()->id())
+            ->orWhere('friend_id', auth()->id())
+            ->with(['user', 'friend'])
+            ->get();
+
+        foreach ($conversations as $conversation) {
+            $conversation->is_user = ($conversation->user_id == auth()->id()) ? 1 : 0;
+        }
+
         return view('chatt', [
             'friend' => $friend,
             'friends' => $friends,
             'messages' => $messages,
+            'conversations'=>$conversations
         ]);
     }
 
@@ -87,49 +91,49 @@ class PusherController extends Controller
     {
         $user = Auth::user();
         $friendId = $request->input('friend_id', null);
-    
+
         if (!$friendId || $friendId == $user->id) {
             return response()->json(['error' => 'Invalid friend_id'], 400);
         }
-    
+
         $messageContent = $request->input('content', '');
         $isImage = $request->hasFile('image');
         $latitude = $request->input('latitude');
         $longitude = $request->input('longitude');
-    
+
         $conversation = Conversation::where(function ($query) use ($user, $friendId) {
             $query->where('user_id', $user->id)
-                  ->where('friend_id', $friendId);
+                ->where('friend_id', $friendId);
         })->orWhere(function ($query) use ($user, $friendId) {
             $query->where('user_id', $friendId)
-                  ->where('friend_id', $user->id);
+                ->where('friend_id', $user->id);
         })->firstOrNew();
-    
+
         if ($isImage) {
             $imagePath = $request->file('image')->store('photos', 'public');
             $mediaUrl = asset('storage/' . $imagePath);
         } else {
             $mediaUrl = null;
         }
-    
+
         $newMessage = null;
-    
+
         if ($messageContent || $isImage) {
             $newMessage = $conversation->messages()->create([
                 'user_id' => $user->id,
                 'content' => $messageContent,
                 'media_url' => $mediaUrl,
             ]);
-    
+
             broadcast(new PusherBroadcast($newMessage->content, $isImage, $friendId))->toOthers();
-    
+
             // if ($latitude && $longitude) {
             //     broadcast(new LocationBroadcast("Location: Latitude $latitude, Longitude $longitude", false, $friendId))->toOthers();
             // }
-    
+
             info('Broadcasted event to friendId: ' . $friendId);
         }
-    
+
         return view('broadcast', [
             'message' => $newMessage ? $newMessage->content : null,
             'mediaUrl' => $mediaUrl,
@@ -140,7 +144,7 @@ class PusherController extends Controller
             ] : null,
         ]);
     }
-    
+
     public function receive(Request $request)
     {
         $message = $request->get('message', '');

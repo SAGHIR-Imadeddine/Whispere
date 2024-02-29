@@ -42,7 +42,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::post('/profile', [ProfileController::class, 'decodeQr'])->name('profile.decodeQr');
     Route::post('/SearchByLink', [ProfileController::class, 'searchByUrl'])->name('check-cache');
-    // Route::post('/conversation', [PusherController::class, 'show'])->name('conversation.show');
+    Route::post('/conversation', [PusherController::class, 'show'])->name('conversation.show');
 
     // Route::post('/conversation', [ConversationController::class, 'show'])->name('conversation.show');
 });
@@ -53,7 +53,7 @@ Route::post('/friendRequest/{user}', [Friend_requistController::class, 'friendRe
 
 Route::delete('/remove-friend-request/{user}', [Friend_requistController::class, 'removeFriendRequest'])->name('remove.friend.request');
 
-Route::post('/conversation', [ConversationController::class, 'show'])->name('conversation.show');
+// Route::post('/conversation', [ConversationController::class, 'show'])->name('conversation.show');
 
 // Route::get('/chat', [ConversationController::class, 'index'])->name('chat');
 // Socialite Routes
