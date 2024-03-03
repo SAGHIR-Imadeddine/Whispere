@@ -11,14 +11,10 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class ChatMessageEvent implements ShouldBroadcast
+class ChatEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    /**
-     * Create a new event instance.
-     */
-    // public $data;
     public $message;
     public User $user;
     public $idR;
@@ -41,12 +37,12 @@ class ChatMessageEvent implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('private.chat.' . $this->idS . '.' . $this->idR),
+            new PrivateChannel('private.chat.' . $this->idR . '.' . $this->idS),
         ];
     }
     public function broadcastAs(){
 
-        return 'chat-receive';
+        return 'chat-message';
     }
     public function broadcastWith(){
 
@@ -57,3 +53,4 @@ class ChatMessageEvent implements ShouldBroadcast
     }
 
 }
+

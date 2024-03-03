@@ -1,8 +1,12 @@
 <?php
 
+use App\Models\Message;
+use App\Events\ChatEvent;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\WebSocketController;
+use App\Http\Controllers\ConversationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,12 +22,9 @@ use App\Http\Controllers\ProfileController;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/test',[TestController::class, 'test']);
-Route::view('/ayoub','checkingWebSocket');
-Route::post('/chat-message',function(Illuminate\Http\Request $request){
-    event(new App\Events\ChatMessageEvent($request->message, auth()->user()));
-    return null;
-});
+Route::get('/chat/{conversation}',[ConversationController::class, 'show']);
+Route::post('/chat-message',[WebSocketController::class, 'chat']);
+Route::get('/conversation',[ConversationController::class, 'index'])->name('conversation');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
